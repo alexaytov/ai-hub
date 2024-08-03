@@ -27,3 +27,4 @@ logging:
     blog: WARN
 server:
   port: 8080
+security.jwt.token.secret-key: my-secret-key
