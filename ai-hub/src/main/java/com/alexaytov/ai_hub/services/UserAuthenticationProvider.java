@@ -3,13 +3,17 @@ package com.alexaytov.ai_hub.services;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import com.alexaytov.ai_hub.dtos.UserDto;
+import com.alexaytov.ai_hub.model.dtos.UserDto;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -33,9 +37,10 @@ public class UserAuthenticationProvider {
         Date validity = new Date(now.getTime() + 3_600_000);
 
         return JWT.create()
-            .withIssuer(userDto.getUsername())
+            .withSubject(userDto.getUsername())
             .withIssuedAt(now)
             .withExpiresAt(validity)
+            .withClaim("roles", userDto.getRoles().stream().map(Enum::name).toList())
             .sign(Algorithm.HMAC256(secretKey));
     }
 
@@ -44,8 +49,9 @@ public class UserAuthenticationProvider {
 
         DecodedJWT decoded = verifier.verify(token);
 
-        UserDto user = new UserDto();
-        user.setUsername(decoded.getIssuer());
+        List<SimpleGrantedAuthority> roles = decoded.getClaim("roles").asList(String.class).stream().map(SimpleGrantedAuthority::new).toList();
+
+        User user = new User(decoded.getSubject(), "", roles);
 
         return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
     }

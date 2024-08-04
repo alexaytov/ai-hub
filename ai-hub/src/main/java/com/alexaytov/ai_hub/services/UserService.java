@@ -1,28 +1,34 @@
 package com.alexaytov.ai_hub.services;
 
 import java.nio.CharBuffer;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.alexaytov.ai_hub.dtos.CredentialsDto;
-import com.alexaytov.ai_hub.dtos.SignUpDto;
-import com.alexaytov.ai_hub.dtos.UserDto;
-import com.alexaytov.ai_hub.entities.User;
+import com.alexaytov.ai_hub.model.dtos.CredentialsDto;
+import com.alexaytov.ai_hub.model.dtos.SignUpDto;
+import com.alexaytov.ai_hub.model.dtos.UserDto;
+import com.alexaytov.ai_hub.model.entities.User;
 import com.alexaytov.ai_hub.exceptions.UserException;
+import com.alexaytov.ai_hub.model.entities.UserRoleEntity;
+import com.alexaytov.ai_hub.model.enums.UserRole;
 import com.alexaytov.ai_hub.repositories.UserRepository;
+import com.alexaytov.ai_hub.repositories.UserRoleRepository;
 import com.alexaytov.ai_hub.utils.UserMapper;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
     }
@@ -41,11 +47,15 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findByUsername(userDto.username());
 
         if (optionalUser.isPresent()) {
-            throw new UserException("Login already exists");
+            throw new UserException("Username already exists");
         }
 
-        User user = userMapper.signUpToUser(userDto);
+        User user = new User();
+        user.setUsername(userDto.username());
         user.setPassword(passwordEncoder.encode(CharBuffer.wrap(userDto.password())));
+
+        UserRoleEntity userRole = userRoleRepository.getByRole(UserRole.USER);
+        user.setRoles(List.of(userRole));
 
         User savedUser = userRepository.save(user);
 

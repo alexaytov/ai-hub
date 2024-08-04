@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.alexaytov.ai_hub.entities.User;
+import com.alexaytov.ai_hub.model.entities.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {

@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alexaytov.ai_hub.dtos.CredentialsDto;
-import com.alexaytov.ai_hub.dtos.SignUpDto;
-import com.alexaytov.ai_hub.dtos.UserDto;
+import com.alexaytov.ai_hub.model.dtos.CredentialsDto;
+import com.alexaytov.ai_hub.model.dtos.SignUpDto;
+import com.alexaytov.ai_hub.model.dtos.UserDto;
 import com.alexaytov.ai_hub.services.UserAuthenticationProvider;
 import com.alexaytov.ai_hub.services.UserService;
 
