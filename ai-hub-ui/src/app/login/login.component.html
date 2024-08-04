@@ -1,0 +1,59 @@
+<div class="login-container">
+  <form [formGroup]="loginForm" class="login-form">
+    <div *ngIf="error">
+      <ui5-message-strip design="Negative" hide-close-button>{{
+        error
+      }}</ui5-message-strip>
+    </div>
+    <br />
+    <div class="form-group">
+      <ui5-label for="username">Username</ui5-label>
+      <ui5-input
+        id="username"
+        formControlName="username"
+        placeholder="Enter your username"
+      ></ui5-input>
+      <div
+        *ngIf="
+          loginForm.get('username')?.invalid &&
+          loginForm.get('username')?.touched
+        "
+        class="error-message"
+      >
+        Username is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <ui5-label for="password">Password</ui5-label>
+      <ui5-input
+        id="password"
+        type="Password"
+        formControlName="password"
+        placeholder="Enter your password"
+      ></ui5-input>
+      <div
+        *ngIf="
+          loginForm.get('password')?.invalid &&
+          loginForm.get('password')?.touched
+        "
+        class="error-message"
+      >
+        Password is required
+      </div>
+    </div>
+
+    <ui5-button
+      design="Emphasized"
+      type="submit"
+      [disabled]="loginForm?.invalid"
+      (click)="onSubmit()"
+      >Login</ui5-button
+    >
+    <div>
+      <p>
+        If you don't have an account, <a href="/register">register here</a>.
+      </p>
+    </div>
+  </form>
+</div>

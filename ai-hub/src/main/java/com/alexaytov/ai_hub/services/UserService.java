@@ -28,7 +28,7 @@ public class UserService {
     }
 
     public UserDto login(CredentialsDto credentialsDto) {
-        User user = userRepository.findByUsername(credentialsDto.login())
+        User user = userRepository.findByUsername(credentialsDto.username())
             .orElseThrow(() -> new UserException("Unknown user"));
 
         if (passwordEncoder.matches(CharBuffer.wrap(credentialsDto.password()), user.getPassword())) {
