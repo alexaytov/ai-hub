@@ -31,3 +31,4 @@ logging:
 server:
   port: 8080
 security.jwt.token.secret-key: my-secret-key
+api-key.secret: ${API_KEY_SECRET:}
