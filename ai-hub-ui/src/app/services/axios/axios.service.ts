@@ -11,7 +11,27 @@ export class AxiosService {
   }
 
   getAuthToken(): string | null {
-    return window.localStorage.getItem('auth_token');
+    // Check if token is expired and remove it
+    const token = window.localStorage.getItem('auth_token');
+    if (token === null) {
+      return null;
+    }
+
+    try {
+      const decodedToken: any = jwt_decode(token);
+      const currentTime = Date.now() / 1000;
+
+      if (decodedToken.exp < currentTime) {
+        window.localStorage.removeItem('auth_token');
+        return null;
+      }
+    } catch (error) {
+      console.error('Invalid token:', error);
+      window.localStorage.removeItem('auth_token');
+      return null;
+    }
+
+    return token;
   }
 
   setAuthToken(token: string | null): void {
@@ -22,10 +42,11 @@ export class AxiosService {
     }
   }
 
-  request(method: string, url: string, data: any): Promise<any> {
+  request(method: string, url: string, data?: any): Promise<any> {
     let headers: any = {};
 
     if (this.getAuthToken() !== null) {
+      console.log('here');
       headers = { Authorization: 'Bearer ' + this.getAuthToken() };
     }
 
@@ -36,4 +57,17 @@ export class AxiosService {
       headers: headers,
     });
   }
+}
+
+function jwt_decode(token: string): any {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(
+    atob(base64)
+      .split('')
+      .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+      .join('')
+  );
+
+  return JSON.parse(jsonPayload);
 }

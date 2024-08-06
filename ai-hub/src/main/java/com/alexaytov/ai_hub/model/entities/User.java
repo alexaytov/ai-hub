@@ -3,6 +3,8 @@ package com.alexaytov.ai_hub.model.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.alexaytov.ai_hub.controllers.SystemMessagesController;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -37,6 +40,12 @@ public class User {
     )
     private List<UserRoleEntity> roles = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SystemMessage> systemMessages;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Agent> agents;
+
     public User() {
     }
 
@@ -44,6 +53,22 @@ public class User {
         this.id = id;
         this.username = username;
         this.password = password;
+    }
+
+    public List<Agent> getAgents() {
+        return agents;
+    }
+
+    public void setAgents(List<Agent> agents) {
+        this.agents = agents;
+    }
+
+    public List<SystemMessage> getSystemMessages() {
+        return systemMessages;
+    }
+
+    public void setSystemMessages(List<SystemMessage> systemMessages) {
+        this.systemMessages = systemMessages;
     }
 
     public Long getId() {
