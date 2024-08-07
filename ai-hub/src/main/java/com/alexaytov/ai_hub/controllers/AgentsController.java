@@ -3,14 +3,11 @@ package com.alexaytov.ai_hub.controllers;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.alexaytov.ai_hub.exceptions.UserException;
 import com.alexaytov.ai_hub.model.dtos.AgentDto;
 import com.alexaytov.ai_hub.model.entities.AIModel;
 import com.alexaytov.ai_hub.model.entities.Agent;
@@ -19,7 +16,7 @@ import com.alexaytov.ai_hub.model.entities.User;
 import com.alexaytov.ai_hub.repositories.AgentRepository;
 import com.alexaytov.ai_hub.repositories.ModelRepository;
 import com.alexaytov.ai_hub.repositories.SystemMessageRepository;
-import com.alexaytov.ai_hub.repositories.UserRepository;
+import com.alexaytov.ai_hub.services.UserService;
 
 import jakarta.validation.Valid;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -27,13 +24,13 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @RestController
 public class AgentsController {
 
-    private final UserRepository userRepository;
     private final SystemMessageRepository messageRepository;
     private final ModelRepository modelRepository;
     private final AgentRepository repository;
+    private final UserService userService;
 
-    public AgentsController(UserRepository userRepository, SystemMessageRepository messageRepository, ModelRepository modelRepository, AgentRepository repository) {
-        this.userRepository = userRepository;
+    public AgentsController(SystemMessageRepository messageRepository, ModelRepository modelRepository, AgentRepository repository, UserService userService) {
+        this.userService = userService;
         this.messageRepository = messageRepository;
         this.modelRepository = modelRepository;
         this.repository = repository;
@@ -41,7 +38,7 @@ public class AgentsController {
 
     @GetMapping("/agents")
     public ResponseEntity<List<AgentDto>> getAgents() {
-        List<AgentDto> agentDtos = getUser().getAgents().stream()
+        List<AgentDto> agentDtos = userService.getUser().getAgents().stream()
             .map(agent -> {
                 AgentDto dto = new AgentDto();
                 dto.setId(agent.getId());
@@ -54,7 +51,7 @@ public class AgentsController {
 
     @GetMapping("/agents/{id}")
     public ResponseEntity<AgentDto> getAgent(Long id) {
-        User user = getUser();
+        User user = userService.getUser();
         Agent agent = repository.findById(id)
             .filter(a -> a.getUser().getId().equals(user.getId()))
             .orElseThrow(() -> new HttpClientErrorException(BAD_REQUEST, "Invalid agent id"));
@@ -69,7 +66,7 @@ public class AgentsController {
 
     @PostMapping("/agents")
     public ResponseEntity<AgentDto> createAgent(@Valid AgentDto dto) {
-        User user = getUser();
+        User user = userService.getUser();
         SystemMessage message = messageRepository.findById(dto.getSystemMessageId())
             .filter(m -> m.getUser().getId().equals(user.getId()))
             .orElseThrow(() -> new HttpClientErrorException(BAD_REQUEST, "Invalid message id"));
@@ -86,10 +83,5 @@ public class AgentsController {
         repository.save(agent);
 
         return ResponseEntity.status(201).body(dto);
-    }
-
-    private User getUser() {
-        UserDetails details = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userRepository.findByUsername(details.getUsername()).orElseThrow(() -> new UserException("User not found"));
     }
 }

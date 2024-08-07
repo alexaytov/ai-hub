@@ -46,7 +46,6 @@ export class AxiosService {
     let headers: any = {};
 
     if (this.getAuthToken() !== null) {
-      console.log('here');
       headers = { Authorization: 'Bearer ' + this.getAuthToken() };
     }
 

@@ -22,8 +22,11 @@ public class AIModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = false, length = 50)
     private String name;
+
+    @Column(nullable = false, length = 255)
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "type_id", nullable = false)
@@ -38,6 +41,14 @@ public class AIModel {
 
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Agent> agents;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public Long getId() {
         return id;
