@@ -30,3 +30,8 @@ ui5-card {
   background-color: white;
   border-radius: 8px;
 }
+
+.view-models-container {
+  margin-top: 1em;
+  text-align: center;
+}

@@ -3,6 +3,7 @@ package com.alexaytov.ai_hub.init;
 import java.util.List;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.alexaytov.ai_hub.model.entities.UserRoleEntity;
@@ -10,6 +11,7 @@ import com.alexaytov.ai_hub.model.enums.UserRole;
 import com.alexaytov.ai_hub.repositories.UserRoleRepository;
 
 @Component
+@Order(1)
 public class InitUserRoles implements CommandLineRunner {
 
     private final UserRoleRepository repository;

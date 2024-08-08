@@ -1,8 +1,6 @@
 package com.alexaytov.ai_hub.utils;
 
-import java.util.Arrays;
-import java.util.List;
-
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.alexaytov.ai_hub.model.dtos.SignUpDto;
@@ -10,7 +8,6 @@ import com.alexaytov.ai_hub.model.dtos.UserDto;
 import com.alexaytov.ai_hub.model.entities.User;
 import com.alexaytov.ai_hub.model.entities.UserRoleEntity;
 
-// TODO User Model Mapper
 @Component
 public class UserMapper {
 

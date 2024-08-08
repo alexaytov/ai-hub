@@ -7,5 +7,5 @@ import com.alexaytov.ai_hub.model.enums.UserRole;
 
 public interface UserRoleRepository extends JpaRepository<UserRoleEntity, Long> {
 
-    UserRoleEntity getByRole(UserRole role);
+    UserRoleEntity findByRole(UserRole role);
 }

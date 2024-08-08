@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +32,21 @@ public class AIModelController {
         this.repository = repository;
         this.mapper = mapper;
         this.userService = userService;
+    }
+
+    @DeleteMapping("/chat-models/{id}")
+    public ResponseEntity<Void> deleteModel(@PathVariable Long id) {
+        AIModel model = repository.findById(id).orElse(null);
+        if (model == null) {
+            return ResponseEntity.noContent().build();
+        }
+
+        if (!model.getUser().equals(userService.getUser())) {
+            return ResponseEntity.noContent().build();
+        }
+
+        repository.delete(model);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/chat-models")

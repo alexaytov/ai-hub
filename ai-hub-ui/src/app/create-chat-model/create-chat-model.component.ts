@@ -14,11 +14,13 @@ import '@ui5/webcomponents/dist/CardHeader.js';
 import '@ui5/webcomponents/dist/Label';
 import '@ui5/webcomponents/dist/Input.js';
 import '@ui5/webcomponents/dist/MessageStrip.js';
+import '@ui5/webcomponents/dist/Button.js';
+
 import { Ui5InputValueAccessorDirective } from '../ui5-input-value-accessor.directive';
-import { Axios, AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import { AxiosService } from '../services/axios/axios.service';
 import { ChatModelType } from '../models/chat-model-type.mode';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-create-chat-model',
@@ -28,6 +30,7 @@ import { Router } from '@angular/router';
     FormsModule,
     Ui5InputValueAccessorDirective,
     ReactiveFormsModule,
+    RouterModule,
   ],
   templateUrl: './create-chat-model.component.html',
   styleUrl: './create-chat-model.component.css',

@@ -36,8 +36,8 @@ public class SecurityConfig {
             .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(requests ->
                 requests.requestMatchers(HttpMethod.POST, "/login", "/register").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/system-messages").authenticated()
-                    .requestMatchers(HttpMethod.POST, "/system-messages").authenticated()
+                    .requestMatchers(HttpMethod.POST, "/chat-models").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/chat-models/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
 
             )

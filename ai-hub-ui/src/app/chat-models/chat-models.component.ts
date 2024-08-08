@@ -29,7 +29,14 @@ export class ChatModelsComponent implements OnInit {
   }
 
   deleteModel(id?: number) {
-    throw new Error('Method not implemented.');
+    this.axios.request('DELETE', `/chat-models/${id}`).then(
+      () => {
+        this.models = this.models?.filter((model) => model.id !== id);
+      },
+      (error) => {
+        this.error = error.message;
+      }
+    );
   }
   constructor(private axios: AxiosService, private router: Router) {}
 

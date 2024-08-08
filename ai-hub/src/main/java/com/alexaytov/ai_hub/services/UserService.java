@@ -61,7 +61,7 @@ public class UserService {
         user.setUsername(userDto.username());
         user.setPassword(passwordEncoder.encode(CharBuffer.wrap(userDto.password())));
 
-        UserRoleEntity userRole = userRoleRepository.getByRole(UserRole.USER);
+        UserRoleEntity userRole = userRoleRepository.findByRole(UserRole.USER);
         user.setRoles(List.of(userRole));
 
         User savedUser = userRepository.save(user);

@@ -10,7 +10,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.alexaytov.ai_hub.model.dtos.UserDto;
@@ -44,15 +43,18 @@ public class UserAuthenticationProvider {
             .sign(Algorithm.HMAC256(secretKey));
     }
 
-    public Authentication validateToken(String token) {
+    public Authentication buildAuthentication(String token) {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretKey)).build();
 
         DecodedJWT decoded = verifier.verify(token);
 
-        List<SimpleGrantedAuthority> roles = decoded.getClaim("roles").asList(String.class).stream().map(SimpleGrantedAuthority::new).toList();
+        List<SimpleGrantedAuthority> roles = decoded.getClaim("roles")
+            .asList(String.class).stream()
+            .map(r -> new SimpleGrantedAuthority("ROLE_" + r))
+            .toList();
 
         User user = new User(decoded.getSubject(), "", roles);
 
-        return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
+        return new UsernamePasswordAuthenticationToken(user, null, roles);
     }
 }
