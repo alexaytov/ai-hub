@@ -8,17 +8,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
+import com.alexaytov.ai_hub.exceptions.UserException;
+import com.alexaytov.ai_hub.model.dtos.ChangeUsernameRequest;
 import com.alexaytov.ai_hub.model.dtos.CredentialsDto;
 import com.alexaytov.ai_hub.model.dtos.SignUpDto;
 import com.alexaytov.ai_hub.model.dtos.UserDto;
 import com.alexaytov.ai_hub.model.entities.User;
-import com.alexaytov.ai_hub.exceptions.UserException;
 import com.alexaytov.ai_hub.model.entities.UserRoleEntity;
 import com.alexaytov.ai_hub.model.enums.UserRole;
 import com.alexaytov.ai_hub.repositories.UserRepository;
 import com.alexaytov.ai_hub.repositories.UserRoleRepository;
 import com.alexaytov.ai_hub.utils.UserMapper;
+
+import jakarta.transaction.Transactional;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Service
 public class UserService {
@@ -72,6 +77,18 @@ public class UserService {
     public UserDto findByUsername(String username) {
         User user = userRepository.findByUsername(username)
             .orElseThrow(() -> new UserException("Unknown user"));
+        return userMapper.toUserDto(user);
+    }
+
+    @Transactional
+    public UserDto changeUsername(ChangeUsernameRequest request) {
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new HttpClientErrorException(BAD_REQUEST, "Username already exists");
+        }
+
+        User user = getUser();
+        user.setUsername(request.getUsername());
+        userRepository.save(user);
         return userMapper.toUserDto(user);
     }
 }

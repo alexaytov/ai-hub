@@ -5,6 +5,7 @@ import { HomeComponent } from './home/home.component';
 import { SystemMessagesComponent } from './system-messages/system-messages.component';
 import { ChatModelsComponent } from './chat-models/chat-models.component';
 import { CreateChatModelComponent } from './create-chat-model/create-chat-model.component';
+import { UserSettingsComponent } from './user-settings/user-settings.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -12,6 +13,7 @@ export const routes: Routes = [
   { path: 'system-messages', component: SystemMessagesComponent },
   { path: 'create-chat-model', component: CreateChatModelComponent },
   { path: 'chat-models', component: ChatModelsComponent },
+  { path: 'user-settings', component: UserSettingsComponent },
   { path: 'home', component: HomeComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];

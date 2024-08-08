@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alexaytov.ai_hub.model.dtos.ChangeUsernameRequest;
 import com.alexaytov.ai_hub.model.dtos.CredentialsDto;
 import com.alexaytov.ai_hub.model.dtos.SignUpDto;
 import com.alexaytov.ai_hub.model.dtos.UserDto;
@@ -26,6 +28,12 @@ public class UsersController {
     public UsersController(UserService userService, UserAuthenticationProvider userAuthenticationProvider) {
         this.userService = userService;
         this.userAuthenticationProvider = userAuthenticationProvider;
+    }
+
+    @PutMapping("/user")
+    public ResponseEntity<UserDto> changeUsername(@Valid @RequestBody ChangeUsernameRequest request) {
+        UserDto userDto = userService.changeUsername(request);
+        return ResponseEntity.ok(userDto);
     }
 
     @PostMapping("/login")

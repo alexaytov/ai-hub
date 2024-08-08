@@ -37,7 +37,8 @@ export class HeaderComponent {
   }
 
   openSettings() {
-    this.router.navigate(['/settings']);
+    this.router.navigate(['/user-settings']);
+    this.profilePopover.nativeElement.open = false;
   }
 
   onNavigateToHome() {

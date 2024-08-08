@@ -10,6 +10,21 @@ export class AxiosService {
     axios.defaults.headers.post['Content-Type'] = 'application/json';
   }
 
+  getUsername() {
+    const token = this.getAuthToken();
+    if (token === null) {
+      return null;
+    }
+
+    try {
+      const decodedToken: any = jwt_decode(token);
+      return decodedToken.sub;
+    } catch (error) {
+      console.error('Invalid token:', error);
+      return null;
+    }
+  }
+
   hasAdminRole(): boolean {
     const token = this.getAuthToken();
     if (token === null) {

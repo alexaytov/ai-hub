@@ -1,0 +1,30 @@
+.settings-container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-gap: 1rem;
+}
+
+.settings-container h2 {
+  grid-column: span 2;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  grid-column: span 1;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5em;
+}
+
+form {
+  min-width: 500px;
+}

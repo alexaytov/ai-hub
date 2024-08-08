@@ -1,0 +1,54 @@
+<div class="settings-container">
+  <h2>User Information</h2>
+
+  <form [formGroup]="form">
+    <ui5-message-strip
+      #success
+      (close)="onHideSuccess()"
+      *ngIf="success"
+      design="Positive"
+    >
+      User Information Successfully Updated
+    </ui5-message-strip>
+
+    <ui5-message-strip
+      #error
+      (close)="onHideError()"
+      *ngIf="error"
+      design="Negative"
+    >
+      An error occurred: {{ error }}
+    </ui5-message-strip>
+
+    <ui5-label for="username-input">Username: </ui5-label>
+    <br />
+    <ui5-input
+      [attr.readonly]="!edit ? '' : null"
+      id="username-input"
+      class="form-group"
+      placeholder="Enter your username"
+      formControlName="username"
+    ></ui5-input>
+
+    <br />
+    <ui5-label for="password-input">Password: </ui5-label>
+    <br />
+    <ui5-input
+      formControlName="password"
+      id="password-input"
+      class="form-group"
+      type="Password"
+      placeholder="Enter your password"
+    ></ui5-input>
+
+    <div class="button-container">
+      <ui5-button (click)="onEdit()">Edit</ui5-button>
+      <ui5-button
+        (click)="onChangeUsername()"
+        design="Emphasized"
+        id="save-button"
+        >Save</ui5-button
+      >
+    </div>
+  </form>
+</div>
