@@ -42,11 +42,14 @@ export class ChatModelsComponent implements OnInit {
 
   models: ChatModel[] | undefined;
   error: string | undefined;
+  hasAdminAccess = false;
 
   ngOnInit(): void {
     if (!this.axios.getAuthToken()) {
       // Redirect to the login page if the user is not logged in
       this.router.navigate(['/login']);
+    } else {
+      this.hasAdminAccess = this.axios.hasAdminRole();
     }
 
     this.axios

@@ -10,6 +10,21 @@ export class AxiosService {
     axios.defaults.headers.post['Content-Type'] = 'application/json';
   }
 
+  hasAdminRole(): boolean {
+    const token = this.getAuthToken();
+    if (token === null) {
+      return false;
+    }
+
+    try {
+      const decodedToken: any = jwt_decode(token);
+      return decodedToken.roles.includes('ADMIN');
+    } catch (error) {
+      console.error('Invalid token:', error);
+      return false;
+    }
+  }
+
   getAuthToken(): string | null {
     // Check if token is expired and remove it
     const token = window.localStorage.getItem('auth_token');

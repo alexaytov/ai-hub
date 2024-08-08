@@ -3,6 +3,8 @@
   primary-title="AI Hub"
   secondary-title="One place for all things AI"
   (profile-click)="onOpenProfilePopover()"
+  (logo-click)="onNavigateToHome()"
+  (menu-item-click)="onNavigate($event)"
 >
   <ui5-avatar
     id="profile"
@@ -12,6 +14,14 @@
   >
   </ui5-avatar>
   <img slot="logo" src="assets/logo.jpeg" />
+  <ui5-li (click)="onNavigate('/home')" slot="menuItems">Home</ui5-li>
+  <ui5-li (click)="onNavigate('/system-messages')" slot="menuItems"
+    >System Messages</ui5-li
+  >
+  <ui5-li (click)="onNavigate('/chat-models')" slot="menuItems"
+    >Chat Models</ui5-li
+  >
+  <ui5-li (click)="onNavigate('/agents')" slot="menuItems">Agents</ui5-li>
 </ui5-shellbar>
 <ui5-popover
   placement="Bottom"

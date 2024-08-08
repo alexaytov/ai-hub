@@ -6,6 +6,7 @@
   >
     <ui5-icon name="ai" slot="avatar"></ui5-icon>
     <ui5-button
+      *ngIf="hasAdminAccess"
       (click)="onNavigateToCreateModel()"
       design="Positive"
       slot="action"
@@ -40,9 +41,13 @@
           {{ model.description }}
         </ui5-table-cell>
         <ui5-table-cell>
-          <ui5-button design="Negative" (click)="deleteModel(model?.id)"
+          <ui5-button
+            *ngIf="hasAdminAccess"
+            design="Negative"
+            (click)="deleteModel(model?.id)"
             >Delete</ui5-button
           >
+          <ui5-button design="Information">Chat</ui5-button>
         </ui5-table-cell>
       </ui5-table-row>
     </ui5-table>
