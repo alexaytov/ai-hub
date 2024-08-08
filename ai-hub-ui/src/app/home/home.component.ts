@@ -1,8 +1,14 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import {
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { AxiosService } from '../services/axios/axios.service';
 import { Router, RouterModule } from '@angular/router';
 
 import '@ui5/webcomponents/dist/Button.js';
+import '@ui5/webcomponents/dist/Popover.js';
 
 @Component({
   selector: 'app-home',
@@ -15,6 +21,8 @@ import '@ui5/webcomponents/dist/Button.js';
 export class HomeComponent implements OnInit {
   constructor(private axios: AxiosService, private router: Router) {}
 
+  @ViewChild('profilePopover') profilePopover: any;
+
   ngOnInit(): void {
     if (!this.axios.getAuthToken()) {
       // Redirect to the login page if the user is not logged in
@@ -23,9 +31,6 @@ export class HomeComponent implements OnInit {
   }
 
   click() {
-    this.axios.request('GET', '/system-messages').then((response) => {
-      console.log(response);
-    });
-    console.log(this.axios.getAuthToken());
+    this.profilePopover.nativeElement.open = true;
   }
 }
