@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alexaytov.ai_hub.model.dtos.ChangeUsernameRequest;
+import com.alexaytov.ai_hub.model.dtos.UpdateUserRequest;
 import com.alexaytov.ai_hub.model.dtos.CredentialsDto;
 import com.alexaytov.ai_hub.model.dtos.SignUpDto;
 import com.alexaytov.ai_hub.model.dtos.UserDto;
@@ -31,8 +31,9 @@ public class UsersController {
     }
 
     @PutMapping("/user")
-    public ResponseEntity<UserDto> changeUsername(@Valid @RequestBody ChangeUsernameRequest request) {
-        UserDto userDto = userService.changeUsername(request);
+    public ResponseEntity<UserDto> changeUsername(@Valid @RequestBody UpdateUserRequest request) {
+        UserDto userDto = userService.updateUser(request);
+        userDto.setToken(userAuthenticationProvider.createToken(userDto));
         return ResponseEntity.ok(userDto);
     }
 

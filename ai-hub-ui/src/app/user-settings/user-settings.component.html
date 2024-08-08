@@ -34,6 +34,7 @@
     <ui5-label for="password-input">Password: </ui5-label>
     <br />
     <ui5-input
+      [attr.readonly]="!edit ? '' : null"
       formControlName="password"
       id="password-input"
       class="form-group"

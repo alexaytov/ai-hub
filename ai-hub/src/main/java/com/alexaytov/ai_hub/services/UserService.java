@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.alexaytov.ai_hub.exceptions.UserException;
-import com.alexaytov.ai_hub.model.dtos.ChangeUsernameRequest;
+import com.alexaytov.ai_hub.model.dtos.UpdateUserRequest;
 import com.alexaytov.ai_hub.model.dtos.CredentialsDto;
 import com.alexaytov.ai_hub.model.dtos.SignUpDto;
 import com.alexaytov.ai_hub.model.dtos.UserDto;
@@ -81,13 +81,20 @@ public class UserService {
     }
 
     @Transactional
-    public UserDto changeUsername(ChangeUsernameRequest request) {
-        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+    public UserDto updateUser(UpdateUserRequest request) {
+        if (request.getUsername() != null && userRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new HttpClientErrorException(BAD_REQUEST, "Username already exists");
         }
 
         User user = getUser();
-        user.setUsername(request.getUsername());
+        if (request.getUsername() != null) {
+            user.setUsername(request.getUsername());
+        }
+
+        if (request.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(CharBuffer.wrap(request.getPassword())));
+        }
+
         userRepository.save(user);
         return userMapper.toUserDto(user);
     }

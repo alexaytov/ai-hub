@@ -59,25 +59,32 @@ export class UserSettingsComponent implements OnInit {
   }
 
   onChangeUsername() {
-    if (this.form.controls['username'].value === this.originalUsername) {
-      return;
+    const changeRequest = {
+      username: null,
+      password: null,
+    };
+
+    const newUsername = this.form.controls['username'].value;
+    if (newUsername !== this.originalUsername) {
+      changeRequest.username = newUsername;
     }
 
-    this.axios
-      .request('PUT', '/user', {
-        username: this.form.controls['username'].value,
-      })
-      .then(
-        (response) => {
-          this.originalUsername = response.data.username;
-          this.form.controls['username'].setValue(response.data.username);
-          this.edit = false;
-          this.success = true;
-        },
-        (error) => {
-          this.error = error.message;
-        }
-      );
+    const newPassword = this.form.controls['password'].value;
+    if (newPassword && newPassword != '') {
+      changeRequest.password = newPassword;
+    }
+
+    this.axios.request('PUT', '/user', changeRequest).then(
+      (response) => {
+        this.originalUsername = response.data.username;
+        this.form.controls['username'].setValue(response.data.username);
+        this.edit = false;
+        this.success = true;
+      },
+      (error) => {
+        this.error = error.message;
+      }
+    );
   }
 
   onHideError() {
