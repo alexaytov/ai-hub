@@ -1,0 +1,17 @@
+div {
+  display: flex;
+  align-items: center;
+  height: 100vh; /* Full viewport height to center vertically */
+  text-align: center; /* Optional: center-align text within product switch items */
+  flex-direction: column;
+}
+
+ui5-product-switch {
+  max-width: 400px; /* Optional: set a maximum width for the product switch */
+  width: 100%;
+}
+
+/* Optional: Style the product switch items, for example, adding some padding or margin */
+ui5-product-switch-item {
+  margin: 10px 0;
+}

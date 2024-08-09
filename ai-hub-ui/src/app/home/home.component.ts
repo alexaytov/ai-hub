@@ -9,6 +9,9 @@ import { Router, RouterModule } from '@angular/router';
 
 import '@ui5/webcomponents/dist/Button.js';
 import '@ui5/webcomponents/dist/Popover.js';
+import '@ui5/webcomponents-fiori/dist/ProductSwitch.js';
+import '@ui5/webcomponents-fiori/dist/ProductSwitchItem.js';
+import '@ui5/webcomponents-icons/dist/home.js';
 
 @Component({
   selector: 'app-home',
@@ -21,6 +24,8 @@ import '@ui5/webcomponents/dist/Popover.js';
 export class HomeComponent implements OnInit {
   constructor(private axios: AxiosService, private router: Router) {}
 
+  username: string | undefined;
+
   @ViewChild('profilePopover') profilePopover: any;
 
   ngOnInit(): void {
@@ -28,6 +33,8 @@ export class HomeComponent implements OnInit {
       // Redirect to the login page if the user is not logged in
       this.router.navigate(['/login']);
     }
+
+    this.username = this.axios.getUsername();
   }
 
   click() {

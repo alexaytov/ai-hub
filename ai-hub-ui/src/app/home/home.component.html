@@ -1,6 +1,31 @@
-<p>home works!</p>
-<ui5-button (click)="click()">Click</ui5-button>
-
-<!-- Route to system messages -->
-<ui5-button routerLink="/system-messages">System Messages</ui5-button>
-<ui5-button id="opener" routerLink="/chat-models">Chat Models</ui5-button>
+<div class="centered-container">
+  <h1>
+    Welcome <span id="username">{{ username }}</span>
+  </h1>
+  <ui5-product-switch>
+    <ui5-product-switch-item
+      title-text="Chat Models"
+      subtitle-text="Get the best out of AI"
+      icon="ai"
+      routerLink="/chat-models"
+    ></ui5-product-switch-item>
+    <ui5-product-switch-item
+      routerLink="/system-messages"
+      title-text="System Messages"
+      subtitle-text="Customize the AI model"
+      icon="letter"
+    ></ui5-product-switch-item>
+    <ui5-product-switch-item
+      routerLink="/agents"
+      title-text="Agents"
+      subtitle-text="Message & Model"
+      icon="personnel-view"
+    ></ui5-product-switch-item>
+    <ui5-product-switch-item
+      routerLink="/user-settings"
+      title-text="User Information"
+      subtitle-text=""
+      icon="person-placeholder"
+    ></ui5-product-switch-item>
+  </ui5-product-switch>
+</div>
