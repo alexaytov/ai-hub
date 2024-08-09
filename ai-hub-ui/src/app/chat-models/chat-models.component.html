@@ -44,10 +44,12 @@
           <ui5-button
             *ngIf="hasAdminAccess"
             design="Negative"
-            (click)="deleteModel(model?.id)"
+            (click)="deleteModel(model.id)"
             >Delete</ui5-button
           >
-          <ui5-button design="Information">Chat</ui5-button>
+          <ui5-button (click)="onChat(model.id)" design="Information"
+            >Chat</ui5-button
+          >
         </ui5-table-cell>
       </ui5-table-row>
     </ui5-table>

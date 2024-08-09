@@ -66,5 +66,10 @@ export class HeaderComponent {
       this.router.navigate(['/agents']);
       return;
     }
+
+    if (path === 'chats') {
+      this.router.navigate(['/chats']);
+      return;
+    }
   }
 }

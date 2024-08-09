@@ -28,6 +28,21 @@ export class ChatModelsComponent implements OnInit {
     this.router.navigate(['/create-chat-model']);
   }
 
+  onChat(modelId: number | undefined) {
+    this.axios
+      .request('POST', '/chats', {
+        modelId,
+      })
+      .then(
+        (response) => {
+          this.router.navigate([`/chat/${response.data.id}`]);
+        },
+        (error) => {
+          this.error = error.message;
+        }
+      );
+  }
+
   deleteModel(id?: number) {
     this.axios.request('DELETE', `/chat-models/${id}`).then(
       () => {

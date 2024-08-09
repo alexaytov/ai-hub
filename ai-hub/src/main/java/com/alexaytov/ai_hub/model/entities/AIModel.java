@@ -42,6 +42,17 @@ public class AIModel {
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Agent> agents;
 
+    @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Chat> chats;
+
+    public List<Chat> getChats() {
+        return chats;
+    }
+
+    public void setChats(List<Chat> chats) {
+        this.chats = chats;
+    }
+
     public String getDescription() {
         return description;
     }

@@ -46,6 +46,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Agent> agents;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Chat> chats;
+
     public User() {
     }
 
@@ -53,6 +56,14 @@ public class User {
         this.id = id;
         this.username = username;
         this.password = password;
+    }
+
+    public List<Chat> getChats() {
+        return chats;
+    }
+
+    public void setChats(List<Chat> chats) {
+        this.chats = chats;
     }
 
     public List<Agent> getAgents() {
