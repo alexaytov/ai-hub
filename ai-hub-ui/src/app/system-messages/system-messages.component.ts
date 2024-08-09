@@ -25,9 +25,6 @@ import { CommonModule } from '@angular/common';
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class SystemMessagesComponent implements OnInit {
-  deleteMessage(arg0: any) {
-    throw new Error('Method not implemented.');
-  }
   constructor(private axios: AxiosService, private router: Router) {}
 
   messages: SystemMessage[] | undefined;
@@ -47,5 +44,19 @@ export class SystemMessagesComponent implements OnInit {
       .catch((error) => {
         console.error(error);
       });
+  }
+
+  onNavigateToCreate() {
+    this.router.navigate(['/create-message']);
+  }
+  deleteMessage(id: number) {
+    this.axios.request('DELETE', `/system-messages/${id}`).then(
+      () => {
+        this.messages = this.messages?.filter((message) => message.id !== id);
+      },
+      (error) => {
+        this.error = error.message;
+      }
+    );
   }
 }

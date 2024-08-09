@@ -1,0 +1,37 @@
+/* ai-model-form.component.css */
+.form-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 10px;
+  padding: 20px;
+}
+
+ui5-label {
+  align-self: center;
+}
+
+ui5-button {
+  grid-column: 1 / -1;
+  justify-self: end;
+}
+
+/* Centering the form within the viewport */
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+}
+
+ui5-card {
+  width: 100%;
+  max-width: 500px; /* Limit the maximum width of the card */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-radius: 8px;
+}
+
+.view-models-container {
+  margin-top: 1em;
+  text-align: center;
+}

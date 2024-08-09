@@ -5,7 +5,9 @@
     [additionalText]="messages?.length"
   >
     <ui5-icon name="letter" slot="avatar"></ui5-icon>
-    <ui5-button design="Positive" slot="action">Create</ui5-button>
+    <ui5-button (click)="onNavigateToCreate()" design="Positive" slot="action"
+      >Create</ui5-button
+    >
   </ui5-card-header>
 
   <div>

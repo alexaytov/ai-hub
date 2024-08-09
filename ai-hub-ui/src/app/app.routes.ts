@@ -8,11 +8,13 @@ import { CreateChatModelComponent } from './create-chat-model/create-chat-model.
 import { UserSettingsComponent } from './user-settings/user-settings.component';
 import { AgentsComponent } from './agents/agents.component';
 import { CreateAgentComponent } from './create-agent/create-agent.component';
+import { CreateMessageComponent } from './create-message/create-message.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'system-messages', component: SystemMessagesComponent },
+  { path: 'create-message', component: CreateMessageComponent },
   { path: 'create-chat-model', component: CreateChatModelComponent },
   { path: 'chat-models', component: ChatModelsComponent },
   { path: 'user-settings', component: UserSettingsComponent },

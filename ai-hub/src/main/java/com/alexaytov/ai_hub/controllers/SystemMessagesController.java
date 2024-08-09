@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,6 +64,20 @@ public class SystemMessagesController {
             return ResponseEntity.ok(mapper.map(message, SystemMessageDto.class));
         }
         throw new HttpClientErrorException(NOT_FOUND, "Not found");
+    }
+
+    @DeleteMapping("/system-messages/{id}")
+    public ResponseEntity<Void> deleteSystemMessage(@PathVariable Long id) {
+        User user = getUser();
+        SystemMessage message = repository.findById(id).orElseThrow(() -> new HttpClientErrorException(NOT_FOUND, "Not found"));
+
+        if (message.getUser().getId().equals(user.getId())) {
+            repository.delete(message);
+            return ResponseEntity.noContent().build();
+        }
+
+        repository.delete(message);
+        return ResponseEntity.noContent().build();
     }
 
     private User getUser() {
