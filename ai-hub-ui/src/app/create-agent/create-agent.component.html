@@ -9,11 +9,11 @@
   </div>
   <div *ngIf="success">
     <ui5-message-strip design="Positive" hide-close-button>
-      Chat Model Successfully Created
+      Agent Successfully Created
     </ui5-message-strip>
     <div class="view-models-container">
-      <ui5-button routerLink="/chat-models" design="Positive"
-        >View Models</ui5-button
+      <ui5-button routerLink="/agents" design="Positive"
+        >View Agents</ui5-button
       >
     </div>
   </div>
@@ -24,11 +24,18 @@
     <ui5-label for="description">Description:</ui5-label>
     <ui5-input id="description" formControlName="description"></ui5-input>
 
-    <ui5-label for="type">Type:</ui5-label>
-    <ui5-select id="type">
-      <ui5-option *ngFor="let msg of systemMessage" value="open_ai"
-        >OPEN AI</ui5-option
-      >
+    <ui5-label for="message">System Message:</ui5-label>
+    <ui5-select #message id="message">
+      <ui5-option *ngFor="let msg of systemMessage" [value]="msg.id">{{
+        msg.message
+      }}</ui5-option>
+    </ui5-select>
+
+    <ui5-label for="model">Model:</ui5-label>
+    <ui5-select #model id="model">
+      <ui5-option *ngFor="let model of models" [value]="model.id">{{
+        model.name
+      }}</ui5-option>
     </ui5-select>
 
     <ui5-button [disabled]="success" design="Emphasized" (click)="onSubmit()"
