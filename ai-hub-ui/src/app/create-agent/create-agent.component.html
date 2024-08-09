@@ -1,0 +1,38 @@
+<ui5-card>
+  <ui5-card-header slot="header" title-text="Create Chat Model">
+    <ui5-icon name="personnel-view" slot="avatar"></ui5-icon>
+  </ui5-card-header>
+  <div *ngIf="error">
+    <ui5-message-strip design="Negative" hide-close-button>{{
+      error
+    }}</ui5-message-strip>
+  </div>
+  <div *ngIf="success">
+    <ui5-message-strip design="Positive" hide-close-button>
+      Chat Model Successfully Created
+    </ui5-message-strip>
+    <div class="view-models-container">
+      <ui5-button routerLink="/chat-models" design="Positive"
+        >View Models</ui5-button
+      >
+    </div>
+  </div>
+  <form [formGroup]="form" class="form-container">
+    <ui5-label for="name">Name:</ui5-label>
+    <ui5-input id="name" formControlName="name"></ui5-input>
+
+    <ui5-label for="description">Description:</ui5-label>
+    <ui5-input id="description" formControlName="description"></ui5-input>
+
+    <ui5-label for="type">Type:</ui5-label>
+    <ui5-select id="type">
+      <ui5-option *ngFor="let msg of systemMessage" value="open_ai"
+        >OPEN AI</ui5-option
+      >
+    </ui5-select>
+
+    <ui5-button [disabled]="success" design="Emphasized" (click)="onSubmit()"
+      >Submit</ui5-button
+    >
+  </form>
+</ui5-card>

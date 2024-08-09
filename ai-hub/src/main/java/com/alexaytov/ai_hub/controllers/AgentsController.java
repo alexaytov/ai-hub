@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
@@ -19,6 +20,7 @@ import com.alexaytov.ai_hub.repositories.SystemMessageRepository;
 import com.alexaytov.ai_hub.services.UserService;
 
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @RestController
@@ -50,7 +52,7 @@ public class AgentsController {
     }
 
     @GetMapping("/agents/{id}")
-    public ResponseEntity<AgentDto> getAgent(Long id) {
+    public ResponseEntity<AgentDto> getAgent(@PathVariable Long id) {
         User user = userService.getUser();
         Agent agent = repository.findById(id)
             .filter(a -> a.getUser().getId().equals(user.getId()))
