@@ -29,12 +29,14 @@
           {{ chat.agentId ? chat.agentId : "No Agent" }}
         </ui5-table-cell>
         <ui5-table-cell>
-          <ui5-button design="Positive" (click)="openChat(chat.id)"
-            >Open</ui5-button
-          >
-          <ui5-button design="Negative" (click)="deleteChat(chat.id)"
-            >Delete</ui5-button
-          >
+          <div class="action-container">
+            <ui5-button design="Positive" (click)="openChat(chat.id)"
+              >Open</ui5-button
+            >
+            <ui5-button design="Negative" (click)="deleteChat(chat.id)"
+              >Delete</ui5-button
+            >
+          </div>
         </ui5-table-cell>
       </ui5-table-row>
     </ui5-table>

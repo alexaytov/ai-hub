@@ -21,6 +21,7 @@ import { AxiosError } from 'axios';
 import { AxiosService } from '../services/axios/axios.service';
 import { ChatModelType } from '../models/chat-model-type.mode';
 import { Router, RouterModule } from '@angular/router';
+import { Error } from '../models/error.model';
 
 @Component({
   selector: 'app-create-chat-model',
@@ -40,6 +41,7 @@ export class CreateChatModelComponent implements OnInit {
   model: ChatModel = {};
   form: FormGroup;
   error: string | undefined;
+  hideError = false;
   success: boolean | undefined;
 
   constructor(
@@ -48,8 +50,8 @@ export class CreateChatModelComponent implements OnInit {
     private router: Router
   ) {
     this.form = this.fb.group({
-      name: ['', Validators.required],
-      description: ['', Validators.required],
+      name: ['', [Validators.required, Validators.maxLength(50)]],
+      description: ['', [Validators.required, Validators.maxLength(255)]],
       apiKey: ['', Validators.required],
     });
   }
@@ -61,6 +63,9 @@ export class CreateChatModelComponent implements OnInit {
   }
 
   onSubmit() {
+    this.error = undefined;
+    this.hideError = false;
+
     if (!this.form.valid) {
       return;
     }
@@ -77,8 +82,16 @@ export class CreateChatModelComponent implements OnInit {
       .then((response) => {
         this.success = true;
       })
-      .catch((error: AxiosError) => {
+      .catch((error: AxiosError<Error>) => {
+        if (error.response) {
+          this.error = error.response.data.message;
+          return;
+        }
         this.error = error.message;
       });
+  }
+
+  onHideError() {
+    this.hideError = true;
   }
 }

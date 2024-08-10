@@ -14,6 +14,7 @@ import { AxiosError } from 'axios';
 import '@ui5/webcomponents/dist/Label';
 import '@ui5/webcomponents/dist/Input.js';
 import '@ui5/webcomponents/dist/MessageStrip.js';
+import { Error } from '../models/error.model';
 
 @Component({
   selector: 'app-register',
@@ -26,6 +27,7 @@ import '@ui5/webcomponents/dist/MessageStrip.js';
 export class RegisterComponent {
   registerForm: FormGroup;
   error: string | undefined;
+  hideError = false;
 
   constructor(
     private fb: FormBuilder,
@@ -39,6 +41,9 @@ export class RegisterComponent {
   }
 
   onSubmit(): void {
+    this.error = undefined;
+    this.hideError = false;
+
     if (this.registerForm?.valid) {
       const { username, password } = this.registerForm.value;
       this.axios
@@ -47,9 +52,18 @@ export class RegisterComponent {
           this.axios.setAuthToken(response.data.token);
           this.router.navigate(['/login']);
         })
-        .catch((error: AxiosError) => {
+        .catch((error: AxiosError<Error>) => {
+          if (error.response) {
+            this.error = error.response.data.message;
+            return;
+          }
+
           this.error = error.message;
         });
     }
+  }
+
+  onCloseError(): void {
+    this.hideError = true;
   }
 }

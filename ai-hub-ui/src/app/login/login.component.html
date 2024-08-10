@@ -1,13 +1,13 @@
 <div class="login-container">
   <form [formGroup]="loginForm" class="login-form">
-    <div *ngIf="error">
-      <ui5-message-strip design="Negative" hide-close-button>{{
+    <div *ngIf="error && !hideError">
+      <ui5-message-strip design="Negative" (close)="onCloseError()">{{
         error
       }}</ui5-message-strip>
     </div>
     <br />
     <div class="form-group">
-      <ui5-label for="username">Username</ui5-label>
+      <ui5-label required for="username">Username</ui5-label>
       <ui5-input
         id="username"
         formControlName="username"
@@ -25,7 +25,7 @@
     </div>
 
     <div class="form-group">
-      <ui5-label for="password">Password</ui5-label>
+      <ui5-label required for="password">Password</ui5-label>
       <ui5-input
         id="password"
         type="Password"

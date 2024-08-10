@@ -1,18 +1,30 @@
-/* ai-model-form.component.css */
 .form-container {
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 10px;
+  grid-template-columns: 1fr;
+  grid-gap: 10px;
+  align-items: center;
+  max-width: 400px;
+  margin: 0 auto; /* Center the form horizontally */
   padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  margin-bottom: 2em;
 }
 
-ui5-label {
-  align-self: center;
+.form-container ui5-label {
+  text-align: left;
+  padding-bottom: 5px; /* Space between label and input */
 }
 
-ui5-button {
-  grid-column: 1 / -1;
-  justify-self: end;
+.form-container ui5-input {
+  width: 100%;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9em;
+  margin-top: -10px; /* Adjust position closer to input if needed */
 }
 
 /* Centering the form within the viewport */
@@ -26,8 +38,6 @@ ui5-button {
 ui5-card {
   width: 100%;
   max-width: 500px; /* Limit the maximum width of the card */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background-color: white;
   border-radius: 8px;
 }
 

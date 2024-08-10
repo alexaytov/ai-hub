@@ -10,10 +10,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.alexaytov.ai_hub.exceptions.UserException;
-import com.alexaytov.ai_hub.model.dtos.UpdateUserRequest;
 import com.alexaytov.ai_hub.model.dtos.CredentialsDto;
 import com.alexaytov.ai_hub.model.dtos.SignUpDto;
+import com.alexaytov.ai_hub.model.dtos.UpdateUserRequest;
 import com.alexaytov.ai_hub.model.dtos.UserDto;
 import com.alexaytov.ai_hub.model.entities.User;
 import com.alexaytov.ai_hub.model.entities.UserRoleEntity;
@@ -27,6 +26,8 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Service
 public class UserService {
+
+    private static final String UNKNOWN_USER = "Unknown user";
 
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
@@ -42,24 +43,25 @@ public class UserService {
 
     public User getUser() {
         UserDetails details = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userRepository.findByUsername(details.getUsername()).orElseThrow(() -> new UserException("User not found"));
+        return userRepository.findByUsername(details.getUsername()).orElseThrow(() -> new HttpClientErrorException(BAD_REQUEST, UNKNOWN_USER));
     }
 
     public UserDto login(CredentialsDto credentialsDto) {
         User user = userRepository.findByUsername(credentialsDto.username())
-            .orElseThrow(() -> new UserException("Unknown user"));
+            .orElseThrow(() -> new HttpClientErrorException(BAD_REQUEST, UNKNOWN_USER));
 
         if (passwordEncoder.matches(CharBuffer.wrap(credentialsDto.password()), user.getPassword())) {
             return userMapper.toUserDto(user);
         }
-        throw new UserException("Invalid password");
+
+        throw new HttpClientErrorException(BAD_REQUEST, UNKNOWN_USER);
     }
 
     public UserDto register(SignUpDto userDto) {
         Optional<User> optionalUser = userRepository.findByUsername(userDto.username());
 
         if (optionalUser.isPresent()) {
-            throw new UserException("Username already exists");
+            throw new HttpClientErrorException(BAD_REQUEST, "Username already exists");
         }
 
         User user = new User();
@@ -72,12 +74,6 @@ public class UserService {
         User savedUser = userRepository.save(user);
 
         return userMapper.toUserDto(savedUser);
-    }
-
-    public UserDto findByUsername(String username) {
-        User user = userRepository.findByUsername(username)
-            .orElseThrow(() -> new UserException("Unknown user"));
-        return userMapper.toUserDto(user);
     }
 
     @Transactional

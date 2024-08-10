@@ -15,6 +15,7 @@ import '@ui5/webcomponents/dist/Label';
 import '@ui5/webcomponents/dist/Input.js';
 import '@ui5/webcomponents/dist/MessageStrip.js';
 import { AxiosError } from 'axios';
+import { Error } from '../models/error.model';
 
 @Component({
   selector: 'app-login',
@@ -27,6 +28,7 @@ import { AxiosError } from 'axios';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   error: string | undefined;
+  hideError = false;
 
   constructor(
     private fb: FormBuilder,
@@ -47,6 +49,9 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.error = undefined;
+    this.hideError = false;
+
     if (this.loginForm?.valid) {
       const { username, password } = this.loginForm.value;
       this.axios.request('POST', '/login', { username, password }).then(
@@ -54,10 +59,19 @@ export class LoginComponent implements OnInit {
           this.axios.setAuthToken(response.data.token);
           this.router.navigate(['/home']);
         },
-        (error: AxiosError) => {
+        (error: AxiosError<Error>) => {
+          if (error.response) {
+            console.log(error.response.data);
+            this.error = error.response.data.message;
+            return;
+          }
           this.error = error.message;
         }
       );
     }
+  }
+
+  onCloseError() {
+    this.hideError = true;
   }
 }

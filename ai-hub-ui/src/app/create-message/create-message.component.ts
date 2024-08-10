@@ -5,6 +5,7 @@ import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AxiosService } from '../services/axios/axios.service';
@@ -43,7 +44,7 @@ export class CreateMessageComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.form = this.fb.group({
-      message: [''],
+      message: ['', [Validators.required, Validators.maxLength(300)]],
     });
   }
 

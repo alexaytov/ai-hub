@@ -18,8 +18,14 @@
     </div>
   </div>
   <form [formGroup]="form" class="form-container">
-    <ui5-label for="message">Message:</ui5-label>
+    <ui5-label required for="message">Message:</ui5-label>
     <ui5-input id="message" formControlName="message"></ui5-input>
+    <div
+      *ngIf="form.get('message')?.invalid && form.get('message')?.touched"
+      class="error-message"
+    >
+      {{ form.get('message')?.errors?.['required'] ? 'Message is required' : 'Message is too long' }}
+    </div>
 
     <ui5-button [disabled]="success" design="Emphasized" (click)="onSubmit()"
       >Submit</ui5-button
