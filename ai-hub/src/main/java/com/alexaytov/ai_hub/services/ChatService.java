@@ -204,4 +204,15 @@ public class ChatService {
                 return dto;
             }).toList();
     }
+
+    @Transactional
+    public void deleteOlderThan(long milliseconds) {
+        chatRepository.findAll().stream()
+            .filter(chat -> System.currentTimeMillis() - chat.getCreated() < milliseconds)
+            .forEach(chat -> {
+                chat.setUser(null);
+                chatRepository.save(chat);
+                chatRepository.delete(chat);
+            });
+    }
 }
