@@ -43,7 +43,7 @@ Currently all controllers are rest controllers.
 7. User Repository
 8. User Role Repository
 
-### Implement a separate service in a distinct project, which will be consumed by your main project through a REST API TODO
+### Implement a separate service in a distinct project, which will be consumed by your main project through a REST API <span style="color:green;">&#x2714;</span>
 - This service must include at least four endpoints: GET, POST, DELETE, and PUT or PATCH.
 
 ### Database

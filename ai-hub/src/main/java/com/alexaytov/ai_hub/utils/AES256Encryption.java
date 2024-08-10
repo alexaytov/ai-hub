@@ -3,8 +3,6 @@ package com.alexaytov.ai_hub.utils;
 import java.util.Base64;
 
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.slf4j.Logger;
@@ -13,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AES256Encryption {
+public class AES256Encryption implements Encryption {
 
     private static final String ALGORITHM = "AES/ECB/PKCS5Padding";
     private static final Logger LOGGER = LoggerFactory.getLogger(AES256Encryption.class);
@@ -24,6 +22,7 @@ public class AES256Encryption {
         this.secret = secret;
     }
 
+    @Override
     public String encrypt(String strToEncrypt) {
         try {
             byte[] decodedSecret = Base64.getDecoder().decode(this.secret);
@@ -37,6 +36,7 @@ public class AES256Encryption {
         }
     }
 
+    @Override
     public String decrypt(String strToDecrypt) {
         try {
             byte[] decodedSecret = Base64.getDecoder().decode(this.secret);

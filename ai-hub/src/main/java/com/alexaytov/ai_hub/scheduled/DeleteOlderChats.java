@@ -5,7 +5,6 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.alexaytov.ai_hub.repositories.ChatRepository;
 import com.alexaytov.ai_hub.services.ChatService;
 
 @Component
