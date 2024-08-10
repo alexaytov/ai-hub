@@ -1,22 +1,22 @@
 <ui5-card>
-  <ui5-card-header slot="header" title-text="Create Chat Model">
+  <ui5-card-header slot="header" i18n-title-text title-text="Create Chat Model">
     <ui5-icon name="ai" slot="avatar"></ui5-icon>
   </ui5-card-header>
   <div *ngIf="error && !hideError" (close)="onHideError()">
     <ui5-message-strip design="Negative">{{ error }}</ui5-message-strip>
   </div>
   <div *ngIf="success">
-    <ui5-message-strip design="Positive" hide-close-button>
+    <ui5-message-strip i18n design="Positive" hide-close-button>
       Chat Model Successfully Created
     </ui5-message-strip>
     <div class="view-models-container">
-      <ui5-button routerLink="/chat-models" design="Positive"
+      <ui5-button i18n routerLink="/chat-models" design="Positive"
         >View Models</ui5-button
       >
     </div>
   </div>
   <form [formGroup]="form" class="form-container">
-    <ui5-label required for="name">Name:</ui5-label>
+    <ui5-label i18n required for="name">Name:</ui5-label>
     <ui5-input id="name" formControlName="name"></ui5-input>
     <div
       *ngIf="form.get('name')?.invalid && form.get('name')?.touched"
@@ -29,7 +29,7 @@
       }}
     </div>
 
-    <ui5-label required for="description">Description:</ui5-label>
+    <ui5-label i18n required for="description">Description:</ui5-label>
     <ui5-input id="description" formControlName="description"></ui5-input>
     <div
       *ngIf="
@@ -44,21 +44,26 @@
       }}
     </div>
 
-    <ui5-label required for="type">Type:</ui5-label>
+    <ui5-label i18n required for="type">Type:</ui5-label>
     <ui5-select id="type">
       <ui5-option value="open_ai">OPEN AI</ui5-option>
     </ui5-select>
 
-    <ui5-label required for="apiKey">API Key:</ui5-label>
+    <ui5-label i18n required for="apiKey">API Key:</ui5-label>
     <ui5-input id="apiKey" type="Password" formControlName="apiKey"></ui5-input>
     <div
+      i18n
       *ngIf="form.get('apiKey')?.invalid && form.get('apiKey')?.touched"
       class="error-message"
     >
       API Key is required
     </div>
 
-    <ui5-button [disabled]="success" design="Emphasized" (click)="onSubmit()"
+    <ui5-button
+      i18n
+      [disabled]="success"
+      design="Emphasized"
+      (click)="onSubmit()"
       >Submit</ui5-button
     >
   </form>

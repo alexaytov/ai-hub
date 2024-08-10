@@ -1,36 +1,46 @@
 <div class="centered-container">
   <h1>
-    Welcome <span id="username">{{ username }}</span>
+    <span i18n>Welcome </span><span id="username">{{ username }}</span>
   </h1>
   <ui5-product-switch>
     <ui5-product-switch-item
       title-text="Chat Models"
+      i18n-title-text
       subtitle-text="Get the best out of AI"
+      i18n-subtitle-text
       icon="ai"
       routerLink="/chat-models"
     ></ui5-product-switch-item>
     <ui5-product-switch-item
       routerLink="/system-messages"
       title-text="System Messages"
+      i18n-title-text
       subtitle-text="Customize the AI model"
+      i18n-subtitle-text
       icon="letter"
     ></ui5-product-switch-item>
     <ui5-product-switch-item
       routerLink="/agents"
       title-text="Agents"
+      i18n-title-text
       subtitle-text="Message & Model"
+      i18n-subtitle-text
       icon="personnel-view"
     ></ui5-product-switch-item>
     <ui5-product-switch-item
       routerLink="/chats"
       title-text="Chats"
+      i18n-title-text
       subtitle-text="Talk to someone or something"
+      i18n-subtitle-text
       icon="personnel-view"
     ></ui5-product-switch-item>
     <ui5-product-switch-item
       routerLink="/user-settings"
       title-text="User Information"
+      i18n-title-text
       subtitle-text="Get to know yourself"
+      i18n-subtitle-text
       icon="person-placeholder"
     ></ui5-product-switch-item>
   </ui5-product-switch>

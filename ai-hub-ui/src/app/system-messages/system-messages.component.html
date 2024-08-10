@@ -5,7 +5,11 @@
     [additionalText]="messages?.length"
   >
     <ui5-icon name="letter" slot="avatar"></ui5-icon>
-    <ui5-button (click)="onNavigateToCreate()" design="Positive" slot="action"
+    <ui5-button
+      i18n
+      (click)="onNavigateToCreate()"
+      design="Positive"
+      slot="action"
       >Create</ui5-button
     >
   </ui5-card-header>
@@ -13,25 +17,25 @@
   <div>
     <ui5-table slot="content" no-data-text="No Data">
       <ui5-table-column slot="columns">
-        <span>Type</span>
+        <span i18n>Type</span>
       </ui5-table-column>
       <ui5-table-column slot="columns">
-        <span>Message</span>
+        <span i18n>Message</span>
       </ui5-table-column>
       <ui5-table-column slot="columns">
-        <span>Action</span>
+        <span i18n>Action</span>
       </ui5-table-column>
 
       <!-- Iterate over the messages array -->
       <ui5-table-row *ngFor="let message of messages">
         <ui5-table-cell>
-          <ui5-tag design="Information">System Message</ui5-tag>
+          <ui5-tag i18n design="Information">System Message</ui5-tag>
         </ui5-table-cell>
         <ui5-table-cell>
           {{ message.message }}
         </ui5-table-cell>
         <ui5-table-cell>
-          <ui5-button design="Negative" (click)="deleteMessage(message.id)"
+          <ui5-button i18n design="Negative" (click)="deleteMessage(message.id)"
             >Delete</ui5-button
           >
         </ui5-table-cell>

@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 
-import '@ui5/webcomponents/dist/Label';
+import '@ui5/webcomponents/dist/Label.js';
 import '@ui5/webcomponents/dist/Input.js';
 import '@ui5/webcomponents/dist/Button.js';
 import '@ui5/webcomponents/dist/MessageStrip.js';

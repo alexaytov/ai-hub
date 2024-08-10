@@ -1,8 +1,9 @@
 <ui5-card>
   <ui5-card-header
     slot="header"
+    i18n-title-text
     title-text="Chats"
-    [additionalText]="chats?.length"
+    [additionalText]="chats.length"
   >
     <ui5-icon name="letter" slot="avatar"></ui5-icon>
   </ui5-card-header>
@@ -10,13 +11,13 @@
   <div>
     <ui5-table slot="content" no-data-text="No Data">
       <ui5-table-column slot="columns">
-        <span>Created</span>
+        <span i18n>Created</span>
       </ui5-table-column>
       <ui5-table-column slot="columns">
-        <span>Model</span>
+        <span i18n>Model</span>
       </ui5-table-column>
       <ui5-table-column slot="columns">
-        <span>Agent</span>
+        <span i18n>Agent</span>
       </ui5-table-column>
 
       <!-- Iterate over the messages array -->
@@ -30,10 +31,10 @@
         </ui5-table-cell>
         <ui5-table-cell>
           <div class="action-container">
-            <ui5-button design="Positive" (click)="openChat(chat.id)"
+            <ui5-button i18n design="Positive" (click)="openChat(chat.id)"
               >Open</ui5-button
             >
-            <ui5-button design="Negative" (click)="deleteChat(chat.id)"
+            <ui5-button i18n design="Negative" (click)="deleteChat(chat.id)"
               >Delete</ui5-button
             >
           </div>

@@ -12,7 +12,7 @@ import { AxiosService } from '../services/axios/axios.service';
 
 import '@ui5/webcomponents/dist/Card.js';
 import '@ui5/webcomponents/dist/CardHeader.js';
-import '@ui5/webcomponents/dist/Label';
+import '@ui5/webcomponents/dist/Label.js';
 import '@ui5/webcomponents/dist/Input.js';
 import '@ui5/webcomponents/dist/MessageStrip.js';
 import '@ui5/webcomponents/dist/Button.js';

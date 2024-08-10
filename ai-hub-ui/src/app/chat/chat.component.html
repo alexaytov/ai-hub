@@ -1,5 +1,5 @@
 <div class="chat-container">
-  <h1>AI Chat Model</h1>
+  <h1 i18n>AI Chat Model</h1>
   <section id="chatWindow" class="chat-window">
     <ng-container *ngFor="let message of chat?.messages">
       <div
@@ -20,6 +20,8 @@
       id="chatInput"
       placeholder="Type your message..."
     ></ui5-input>
-    <ui5-button design="Emphasized" (click)="sendMessage()">Send</ui5-button>
+    <ui5-button i18n design="Emphasized" (click)="sendMessage()"
+      >Send</ui5-button
+    >
   </div>
 </div>

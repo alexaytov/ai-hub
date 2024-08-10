@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 import { AxiosService } from '../services/axios/axios.service';
 import { Router } from '@angular/router';
 
-import '@ui5/webcomponents/dist/Label';
+import '@ui5/webcomponents/dist/Label.js';
 import '@ui5/webcomponents/dist/Input.js';
 import '@ui5/webcomponents/dist/MessageStrip.js';
 import { AxiosError } from 'axios';

@@ -1,6 +1,8 @@
 <ui5-shellbar
   id="shellbar"
+  i18n-primary-title
   primary-title="AI Hub"
+  i18n-secondary-title
   secondary-title="One place for all things AI"
   (profile-click)="onOpenProfilePopover()"
   (logo-click)="onNavigateToHome()"
@@ -14,15 +16,15 @@
   >
   </ui5-avatar>
   <img slot="logo" src="assets/logo.jpeg" />
-  <ui5-li (click)="onNavigate('/home')" slot="menuItems">Home</ui5-li>
-  <ui5-li (click)="onNavigate('/chat-models')" slot="menuItems"
+  <ui5-li i18n (click)="onNavigate('/home')" slot="menuItems">Home</ui5-li>
+  <ui5-li i18n (click)="onNavigate('/chat-models')" slot="menuItems"
     >Chat Models</ui5-li
   >
-  <ui5-li (click)="onNavigate('/system-messages')" slot="menuItems"
+  <ui5-li i18n (click)="onNavigate('/system-messages')" slot="menuItems"
     >System Messages</ui5-li
   >
-  <ui5-li (click)="onNavigate('/agents')" slot="menuItems">Agents</ui5-li>
-  <ui5-li (click)="onNavigate('/chats')" slot="menuItems">Chats</ui5-li>
+  <ui5-li i18n (click)="onNavigate('/agents')" slot="menuItems">Agents</ui5-li>
+  <ui5-li i18n (click)="onNavigate('/chats')" slot="menuItems">Chats</ui5-li>
 </ui5-shellbar>
 <ui5-popover
   placement="Bottom"
@@ -32,8 +34,8 @@
 >
   <div class="action-popover-content" style="margin-top: 1rem">
     <ui5-list separators="None">
-      <ui5-li (click)="openSettings()" icon="settings">Settings</ui5-li>
-      <ui5-li (click)="logout()" icon="log">Sign out</ui5-li>
+      <ui5-li i18n (click)="openSettings()" icon="settings">Settings</ui5-li>
+      <ui5-li i18n (click)="logout()" icon="log">Sign out</ui5-li>
     </ui5-list>
   </div>
 </ui5-popover>

@@ -57,15 +57,15 @@ Currently all controllers are rest controllers.
 - Ensure role management is secured and error-safe. <span style="color:green;">&#x2714;</span>
 - Users and administrators should be able to edit their usernames. <span style="color:green;">&#x2714;</span>
 
-### Validation and Error Handling TODO
+### Validation and Error Handling
 - Implement client-side and server-side validation. <span style="color:green;">&#x2714;</span>
 - Display appropriate validation messages to the user. <span style="color:green;">&#x2714;</span>
 
-### Internationalization (i18n) TODO
+### Internationalization (i18n) <span style="color:green;">&#x2714;</span>
 - Support multiple languages.
 
-### Scheduling TODO
-- Implement scheduled jobs affecting the application, e.g., once/twice a day.
+### Scheduling
+- Implement scheduled jobs affecting the application, e.g., once/twice a day. <span style="color:green;">&#x2714;</span>
 
 ### Mapping
 - Use MapStruct, ModelMapper or another mapping library <span style="color:green;">&#x2714;</span>

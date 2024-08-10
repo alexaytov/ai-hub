@@ -1,11 +1,13 @@
 <ui5-card>
   <ui5-card-header
     slot="header"
+    i18n-title-text
     title-text="Chat Models"
     [additionalText]="models?.length"
   >
     <ui5-icon name="ai" slot="avatar"></ui5-icon>
     <ui5-button
+      i18n
       *ngIf="hasAdminAccess"
       (click)="onNavigateToCreateModel()"
       design="Positive"
@@ -17,16 +19,16 @@
   <div>
     <ui5-table slot="content" no-data-text="No Data">
       <ui5-table-column slot="columns">
-        <span>Type</span>
+        <span i18n>Type</span>
       </ui5-table-column>
       <ui5-table-column slot="columns">
-        <span>Name</span>
+        <span i18n>Name</span>
       </ui5-table-column>
       <ui5-table-column slot="columns">
-        <span>Description</span>
+        <span i18n>Description</span>
       </ui5-table-column>
       <ui5-table-column slot="columns">
-        <span>Action</span>
+        <span i18n>Action</span>
       </ui5-table-column>
 
       <!-- Iterate over the messages array -->
@@ -46,6 +48,7 @@
               >Chat</ui5-button
             >
             <ui5-button
+              i18n
               *ngIf="hasAdminAccess"
               design="Negative"
               (click)="deleteModel(model.id)"

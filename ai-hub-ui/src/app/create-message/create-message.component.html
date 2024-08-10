@@ -1,5 +1,5 @@
 <ui5-card>
-  <ui5-card-header slot="header" title-text="Create Chat Model">
+  <ui5-card-header slot="header" i18n-title-text title-text="Create Chat Model">
     <ui5-icon name="letter" slot="avatar"></ui5-icon>
   </ui5-card-header>
   <div *ngIf="error">
@@ -8,17 +8,17 @@
     }}</ui5-message-strip>
   </div>
   <div *ngIf="success">
-    <ui5-message-strip design="Positive" hide-close-button>
+    <ui5-message-strip i18n design="Positive" hide-close-button>
       Chat Model Successfully Created
     </ui5-message-strip>
     <div class="view-models-container">
-      <ui5-button routerLink="/system-messages" design="Positive"
+      <ui5-button i18n routerLink="/system-messages" design="Positive"
         >View Messages</ui5-button
       >
     </div>
   </div>
   <form [formGroup]="form" class="form-container">
-    <ui5-label required for="message">Message:</ui5-label>
+    <ui5-label i18n required for="message">Message:</ui5-label>
     <ui5-input id="message" formControlName="message"></ui5-input>
     <div
       *ngIf="form.get('message')?.invalid && form.get('message')?.touched"
@@ -27,7 +27,11 @@
       {{ form.get('message')?.errors?.['required'] ? 'Message is required' : 'Message is too long' }}
     </div>
 
-    <ui5-button [disabled]="success" design="Emphasized" (click)="onSubmit()"
+    <ui5-button
+      i18n
+      [disabled]="success"
+      design="Emphasized"
+      (click)="onSubmit()"
       >Submit</ui5-button
     >
   </form>

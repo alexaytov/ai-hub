@@ -7,13 +7,15 @@
     </div>
     <br />
     <div class="form-group">
-      <ui5-label required for="username">Username</ui5-label>
+      <ui5-label i18n required for="username">Username</ui5-label>
       <ui5-input
         id="username"
         formControlName="username"
         placeholder="Enter your username"
+        i18n-placeholder
       ></ui5-input>
       <div
+        i18n
         *ngIf="
           loginForm.get('username')?.invalid &&
           loginForm.get('username')?.touched
@@ -25,14 +27,16 @@
     </div>
 
     <div class="form-group">
-      <ui5-label required for="password">Password</ui5-label>
+      <ui5-label i18n required for="password">Password</ui5-label>
       <ui5-input
         id="password"
         type="Password"
         formControlName="password"
         placeholder="Enter your password"
+        i18n-placeholder
       ></ui5-input>
       <div
+        i18n
         *ngIf="
           loginForm.get('password')?.invalid &&
           loginForm.get('password')?.touched
@@ -44,15 +48,17 @@
     </div>
 
     <ui5-button
+      i18n
       design="Emphasized"
       type="submit"
-      [disabled]="loginForm?.invalid"
+      [disabled]="loginForm.invalid"
       (click)="onSubmit()"
       >Login</ui5-button
     >
     <div>
       <p>
-        If you don't have an account, <a href="/register">register here</a>.
+        <span i18n>If you don't have an account,</span>
+        <a i18n href="/register">register here</a>.
       </p>
     </div>
   </form>

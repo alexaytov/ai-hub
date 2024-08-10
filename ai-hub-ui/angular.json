@@ -4,6 +4,15 @@
   "newProjectRoot": "projects",
   "projects": {
     "ai-hub-ui": {
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "bg": {
+            "translation": "src/locale/messages.bg.xlf",
+            "baseHref": "/bg/"
+          }
+        }
+      },
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,6 +22,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "localize": true,
             "outputPath": "dist/ai-hub-ui",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -30,6 +40,9 @@
             "scripts": []
           },
           "configurations": {
+            "bg": {
+              "localize": ["bg"]
+            },
             "production": {
               "budgets": [
                 {
@@ -61,6 +74,9 @@
             },
             "development": {
               "buildTarget": "ai-hub-ui:build:development"
+            },
+            "bg": {
+              "buildTarget": "ai-hub-ui:build:development,bg"
             }
           },
           "defaultConfiguration": "development"

@@ -1,8 +1,9 @@
 <div class="settings-container">
-  <h2>User Information</h2>
+  <h2 i18n>User Information</h2>
 
   <form [formGroup]="form">
     <ui5-message-strip
+      i18n
       #success
       (close)="onHideSuccess()"
       *ngIf="success"
@@ -16,24 +17,28 @@
       (close)="onHideError()"
       *ngIf="error"
       design="Negative"
+      i18n
     >
       An error occurred: {{ error }}
     </ui5-message-strip>
 
-    <ui5-label for="username-input">Username: </ui5-label>
+    <ui5-label i18n for="username-input">Username: </ui5-label>
     <br />
     <ui5-input
+      i18n
       [attr.readonly]="!edit ? '' : null"
       id="username-input"
       class="form-group"
       placeholder="Enter your username"
+      i18n-placeholder
       formControlName="username"
     ></ui5-input>
 
     <br />
-    <ui5-label for="password-input">Password: </ui5-label>
+    <ui5-label i18n for="password-input">Password: </ui5-label>
     <br />
     <ui5-input
+      i18n-placeholder
       [attr.readonly]="!edit ? '' : null"
       formControlName="password"
       id="password-input"
@@ -43,8 +48,9 @@
     ></ui5-input>
 
     <div class="button-container">
-      <ui5-button (click)="onEdit()">Edit</ui5-button>
+      <ui5-button i18n (click)="onEdit()">Edit</ui5-button>
       <ui5-button
+        i18n
         (click)="onChangeUsername()"
         design="Emphasized"
         id="save-button"

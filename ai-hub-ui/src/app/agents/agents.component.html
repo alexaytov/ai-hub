@@ -2,10 +2,12 @@
   <ui5-card-header
     slot="header"
     title-text="Chat Agents"
+    i18n-title-text
     [additionalText]="agents?.length"
   >
     <ui5-icon name="personnel-view" slot="avatar"></ui5-icon>
     <ui5-button
+      i18n
       (click)="onNavigateToCreateAgent()"
       design="Positive"
       slot="action"
@@ -14,21 +16,21 @@
   </ui5-card-header>
 
   <div>
-    <ui5-table slot="content" no-data-text="No Data">
+    <ui5-table slot="content" i18n-no-data no-data-text="No Data">
       <ui5-table-column slot="columns">
-        <span>Name</span>
+        <span i18n>Name</span>
       </ui5-table-column>
       <ui5-table-column slot="columns">
-        <span>Description</span>
+        <span i18n>Description</span>
       </ui5-table-column>
       <ui5-table-column slot="columns">
-        <span>Model</span>
+        <span i18n>Model</span>
       </ui5-table-column>
       <ui5-table-column slot="columns">
-        <span>System Message</span>
+        <span i18n>System Message</span>
       </ui5-table-column>
       <ui5-table-column slot="columns">
-        <span>Action</span>
+        <span i18n>Action</span>
       </ui5-table-column>
 
       <!-- Iterate over the messages array -->
@@ -46,10 +48,10 @@
           {{ agent.modelId }}
         </ui5-table-cell>
         <ui5-table-cell>
-          <ui5-button design="Negative" (click)="deleteAgent(agent?.id)"
+          <ui5-button i18n design="Negative" (click)="deleteAgent(agent?.id)"
             >Delete</ui5-button
           >
-          <ui5-button design="Information">Chat</ui5-button>
+          <ui5-button i18n design="Information">Chat</ui5-button>
         </ui5-table-cell>
       </ui5-table-row>
     </ui5-table>
