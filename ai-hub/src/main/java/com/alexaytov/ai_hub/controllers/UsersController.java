@@ -14,6 +14,7 @@ import com.alexaytov.ai_hub.model.dtos.CredentialsDto;
 import com.alexaytov.ai_hub.model.dtos.SignUpDto;
 import com.alexaytov.ai_hub.model.dtos.UserDto;
 import com.alexaytov.ai_hub.model.enums.UserRole;
+import com.alexaytov.ai_hub.services.AuditLogService;
 import com.alexaytov.ai_hub.services.UserAuthenticationProvider;
 import com.alexaytov.ai_hub.services.UserService;
 
@@ -24,10 +25,12 @@ public class UsersController {
 
     private final UserService userService;
     private final UserAuthenticationProvider userAuthenticationProvider;
+    private final AuditLogService auditLog;
 
-    public UsersController(UserService userService, UserAuthenticationProvider userAuthenticationProvider) {
+    public UsersController(UserService userService, UserAuthenticationProvider userAuthenticationProvider, AuditLogService auditLog) {
         this.userService = userService;
         this.userAuthenticationProvider = userAuthenticationProvider;
+        this.auditLog = auditLog;
     }
 
     @PutMapping("/user")
@@ -47,6 +50,8 @@ public class UsersController {
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(@RequestBody @Valid SignUpDto user) {
         UserDto createdUser = userService.register(user);
+        auditLog.createUser(createdUser.getId());
+
         createdUser.setRoles(List.of(UserRole.USER));
         createdUser.setToken(userAuthenticationProvider.createToken(createdUser));
         return ResponseEntity.created(URI.create("/users/" + createdUser.getId())).body(createdUser);
