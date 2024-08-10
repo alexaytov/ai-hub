@@ -11,6 +11,7 @@ import { CreateAgentComponent } from './create-agent/create-agent.component';
 import { CreateMessageComponent } from './create-message/create-message.component';
 import { ChatsComponent } from './chats/chats.component';
 import { ChatComponent } from './chat/chat.component';
+import { AuditLogsComponent } from './audit-logs/audit-logs.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -25,5 +26,6 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'agents', component: AgentsComponent },
   { path: 'create-agent', component: CreateAgentComponent },
+  { path: 'audit-logs', component: AuditLogsComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];

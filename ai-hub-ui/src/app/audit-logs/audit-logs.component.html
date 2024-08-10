@@ -1,0 +1,29 @@
+<ui5-card>
+  <ui5-card-header
+    slot="header"
+    title-text="Audit Logs"
+    i18n-title-text
+    [additionalText]="logs?.length + ''"
+  >
+    <ui5-icon name="activities" slot="avatar"></ui5-icon>
+  </ui5-card-header>
+
+  <div *ngIf="error && !hideError">
+    <ui5-message-strip design="Negative" (close)="onHideError()">{{
+      error
+    }}</ui5-message-strip>
+  </div>
+
+  <ui5-timeline>
+    <ui5-timeline-item
+      *ngFor="let log of logs"
+      i18n-title-text
+      title-text="Action Log"
+      [subtitleText]="log.timestamp | date : 'medium'"
+      icon="tri-state"
+    >
+      {{ log.message }}</ui5-timeline-item
+    >
+    >
+  </ui5-timeline>
+</ui5-card>

@@ -9,6 +9,7 @@ import '@ui5/webcomponents/dist/Popover.js';
 
 import '@ui5/webcomponents-icons/dist/log.js';
 import '@ui5/webcomponents-icons/dist/settings.js';
+import '@ui5/webcomponents-icons/dist/activities.js';
 import '@ui5/webcomponents/dist/Avatar.js';
 import { Router, RouterModule } from '@angular/router';
 import { AxiosService } from '../services/axios/axios.service';
@@ -38,6 +39,11 @@ export class HeaderComponent {
 
   openSettings() {
     this.router.navigate(['/user-settings']);
+    this.profilePopover.nativeElement.open = false;
+  }
+
+  openAuditLogs() {
+    this.router.navigate(['/audit-logs']);
     this.profilePopover.nativeElement.open = false;
   }
 

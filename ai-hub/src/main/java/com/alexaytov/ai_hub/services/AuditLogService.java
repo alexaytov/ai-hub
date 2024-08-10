@@ -1,5 +1,7 @@
 package com.alexaytov.ai_hub.services;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,7 +52,8 @@ public class AuditLogService {
 
     public void postAuditLog(String message) {
         Long userId = userService.getUser().getId();
-        AuditLogDto body = new AuditLogDto(message);
+        AuditLogDto body = new AuditLogDto();
+        body.setMessage(message);
         try {
             template.put(endpoint + "/users/" + userId + "/logs", body);
         } catch (RestClientException ex) {
@@ -59,10 +62,11 @@ public class AuditLogService {
         }
     }
 
-    public void getAuditLogs() {
+    public List<AuditLogDto> getAuditLogs() {
         Long userId = userService.getUser().getId();
         try {
-            template.getForObject(endpoint + "/users/" + userId + "/logs", AuditLogDto[].class);
+            AuditLogDto[] logs = template.getForObject(endpoint + "/users/" + userId + "/logs", AuditLogDto[].class);
+            return List.of(logs);
         } catch (RestClientException ex) {
             LOGGER.error("Error while getting audit logs in audit log service", ex);
             throw new HttpClientErrorException(INTERNAL_SERVER_ERROR, "Error while getting audit logs in audit log service");
