@@ -9,8 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.alexaytov.ai_hub.model.dtos.ChatDto;
+import com.alexaytov.ai_hub.model.dtos.ChatMessageDto;
 import com.alexaytov.ai_hub.model.dtos.ChatModelQueryDto;
 import com.alexaytov.ai_hub.model.dtos.CreateChatDto;
+import com.alexaytov.ai_hub.model.dtos.GetChatResponse;
+import com.alexaytov.ai_hub.model.dtos.QueryResponseDto;
 import com.alexaytov.ai_hub.model.entities.Agent;
 import com.alexaytov.ai_hub.model.entities.Chat;
 import com.alexaytov.ai_hub.model.entities.MessageType;
@@ -26,7 +29,6 @@ import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.openai.OpenAiChatModel;
-import dev.langchain4j.model.output.Response;
 import jakarta.transaction.Transactional;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -53,7 +55,7 @@ public class ChatService {
         this.typeRepository = typeRepository;
     }
 
-    public String query(Long chatId, ChatModelQueryDto query) {
+    public QueryResponseDto query(Long chatId, ChatModelQueryDto query) {
         User user = userService.getUser();
         Chat chat = chatRepository.findById(chatId)
             .filter(c -> c.getUser().getId().equals(user.getId()))
@@ -82,16 +84,26 @@ public class ChatService {
             .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
         messages.add(new UserMessage(query.getContent()));
 
-        Response<AiMessage> response = model.generate(messages);
+
+        String response;
+        try {
+            response = model.generate(messages).content().text();
+        } catch (Exception ex) {
+            response = "An error occurred while processing the request. Please try again later.";
+        }
 
         com.alexaytov.ai_hub.model.entities.ChatMessage newMessage = new com.alexaytov.ai_hub.model.entities.ChatMessage();
-        newMessage.setContent(response.content().text());
+        newMessage.setContent(response);
         newMessage.setType(typeRepository.findByType(MessageType.ASSISTANT));
 
         chat.getMessages().add(newMessage);
         chatRepository.save(chat);
 
-        return response.content().text();
+        QueryResponseDto responseDto = new QueryResponseDto();
+        responseDto.setRole("assistant");
+        responseDto.setContent(response);
+
+        return responseDto;
     }
 
     @Transactional
@@ -152,5 +164,44 @@ public class ChatService {
         chat.get().setUser(null);
         repository.save(chat.get());
         repository.deleteById(chat.get().getId());
+    }
+
+    public GetChatResponse getChat(Long id) {
+        User user = userService.getUser();
+        Chat chat = user.getChats().stream()
+            .filter(c -> c.getId().equals(id))
+            .findFirst()
+            .orElseThrow(() -> new HttpClientErrorException(BAD_REQUEST, "Chat not found"));
+
+        List<ChatMessageDto> messages = chat.getMessages().stream()
+            .map(msg -> {
+                ChatMessageDto dto = new ChatMessageDto();
+                dto.setType(msg.getType().getType());
+                dto.setContent(msg.getContent());
+                return dto;
+            }).toList();
+        GetChatResponse response = new GetChatResponse();
+        response.setMessages(messages);
+        return response;
+    }
+
+    public List<ChatDto> getChats() {
+        return repository.findAll().stream()
+            .filter(chat -> chat.getUser().getId().equals(userService.getUser().getId()))
+            .map(c -> {
+                ChatDto dto = new ChatDto();
+                dto.setId(c.getId());
+                if (c.getAgent() != null) {
+                    dto.setAgentId(c.getAgent().getId());
+                    dto.setModelId(c.getAgent().getModel().getId());
+                }
+
+                if (c.getModel() != null) {
+                    dto.setModelId(c.getModel().getId());
+                }
+                dto.setCreated(c.getCreated());
+
+                return dto;
+            }).toList();
     }
 }

@@ -1,5 +1,7 @@
 package com.alexaytov.ai_hub.services;
 
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -11,6 +13,7 @@ import com.alexaytov.ai_hub.repositories.ModelTypeRepository;
 import com.alexaytov.ai_hub.utils.AES256Encryption;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class ModelService {
@@ -29,7 +32,7 @@ public class ModelService {
         this.modelTypeRepository = modelTypeRepository;
     }
 
-    public AIModel save(AIModelDto dto) {
+    public AIModelDto createModel(AIModelDto dto) {
         if (repository.findByName(dto.getName()).isPresent()) {
             throw new HttpClientErrorException(BAD_REQUEST, "Model with this name already exists");
         }
@@ -43,8 +46,41 @@ public class ModelService {
             });
 
         newModel.setUser(userService.getUser());
-        return repository.save(newModel);
+        newModel = repository.save(newModel);
+
+        dto.setId(newModel.getId());
+        return dto;
     }
 
 
+    public void deleteModel(Long id) {
+        AIModel model = repository.findById(id).orElse(null);
+        if (model == null) {
+            return;
+        }
+
+        if (!model.getUser().getId().equals(userService.getUser().getId())) {
+            return;
+        }
+
+        repository.delete(model);
+    }
+
+    public List<AIModelDto> getModels() {
+        return repository.findAll().stream()
+            .map(model -> mapper.map(model, AIModelDto.class))
+            .toList();
+    }
+
+    public AIModelDto getModel(Long id) {
+        AIModel model = repository.findById(id).orElse(null);
+        if (model == null) {
+            throw new HttpClientErrorException(NOT_FOUND, "Model not found");
+        }
+
+        AIModelDto dto = mapper.map(model, AIModelDto.class);
+        dto.setType(model.getType().getType());
+        dto.clearApiKey();
+        return dto;
+    }
 }
