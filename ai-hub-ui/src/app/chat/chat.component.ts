@@ -1,17 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AxiosService } from '../services/axios/axios.service';
 import { ChatContent } from '../models/chat-content.model';
+import { CommonModule } from '@angular/common';
+
+import '@ui5/webcomponents/dist/Button.js';
+import '@ui5/webcomponents-compat/dist/Table.js';
+import '@ui5/webcomponents-compat/dist/TableColumn.js';
+import '@ui5/webcomponents-compat/dist/TableRow.js';
+import '@ui5/webcomponents-compat/dist/TableGroupRow.js';
+import '@ui5/webcomponents-compat/dist/TableCell.js';
+import '@ui5/webcomponents/dist/Card.js';
+import '@ui5/webcomponents/dist/CardHeader.js';
+import '@ui5/webcomponents/dist/Tag.js';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ChatComponent implements OnInit {
+  @ViewChild('input') input: ElementRef | undefined;
+
   chat: ChatContent | undefined;
+  chatId: number | null = null;
 
   constructor(
     private router: Router,
@@ -25,7 +46,8 @@ export class ChatComponent implements OnInit {
     }
 
     this.route.paramMap.subscribe((params) => {
-      const id = params.get('id');
+      const id = Number(params.get('id'));
+      this.chatId = id;
 
       if (id) {
         this.axios.request('GET', `/chats/${id}`).then(
@@ -38,5 +60,35 @@ export class ChatComponent implements OnInit {
         );
       }
     });
+  }
+
+  sendMessage() {
+    const message = this.input?.nativeElement.value;
+    this.chat?.messages.push({
+      content: message,
+      type: 'user',
+    });
+    if (this.input) {
+      this.input.nativeElement.value = '';
+    }
+
+    this.axios
+      .request('PUT', `/chats/${this.chatId}`, {
+        content: message,
+      })
+      .then(
+        (response) => {
+          this.chat?.messages.push({
+            content: response.data.content,
+            type: 'assistant',
+          });
+        },
+        (error) => {
+          this.chat?.messages.push({
+            content: error.message,
+            type: 'assistant',
+          });
+        }
+      );
   }
 }

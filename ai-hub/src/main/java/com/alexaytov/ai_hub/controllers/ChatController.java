@@ -7,20 +7,24 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.alexaytov.ai_hub.model.dtos.ChatDto;
 import com.alexaytov.ai_hub.model.dtos.ChatMessageDto;
+import com.alexaytov.ai_hub.model.dtos.ChatModelQueryDto;
 import com.alexaytov.ai_hub.model.dtos.CreateChatDto;
 import com.alexaytov.ai_hub.model.dtos.GetChatResponse;
+import com.alexaytov.ai_hub.model.dtos.QueryResponseDto;
 import com.alexaytov.ai_hub.model.entities.Chat;
 import com.alexaytov.ai_hub.model.entities.User;
 import com.alexaytov.ai_hub.repositories.ChatRepository;
 import com.alexaytov.ai_hub.services.ChatService;
 import com.alexaytov.ai_hub.services.UserService;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -35,6 +39,14 @@ public class ChatController {
         this.chatService = chatService;
         this.repository = repository;
         this.userService = userService;
+    }
+
+    @PutMapping("/chats/{id}")
+    public ResponseEntity<QueryResponseDto> queryModel(@PathVariable Long id, @Valid @RequestBody ChatModelQueryDto dto) {
+        String message = chatService.query(id, dto);
+        QueryResponseDto response = new QueryResponseDto();
+        response.setContent(message);
+        return ResponseEntity.status(200).body(response);
     }
 
     @PostMapping("/chats")
