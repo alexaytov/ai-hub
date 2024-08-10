@@ -1,0 +1,134 @@
+<source>Chat Agents</source>
+<target>Чат Агенти</target>
+<source>Create</source>
+<target>Създай</target>
+<source>Name</source>
+<target>Име</target>
+<source>Description</source>
+<target>Описание</target>
+<source>Model</source>
+<target>Модел</target>
+<source>System Message</source>
+<target>Системно Съобщение</target>
+<source>Action</source>
+<target>Действие</target>
+<source>Delete</source>
+<target>Изтрий</target>
+<source>Chat</source>
+<target>Чат</target>
+<target>Audit Logs</target>
+<source>Логове за Проследимост</source>
+<source>Action Log</source>
+<target>Действие</target>
+<source>Chat Models</source>
+<target>Чат Модели</target>
+<source>Type</source>
+<target>Тип</target>
+<source>AI Chat Model</source>
+<target>Изкуствен Интелект Чат Модел</target>
+<source>Send</source>
+<target>Изпрати</target>
+<source>Chats</source>
+<target>Чатове</target>
+<source>Created</source>
+<target>Създаено</target>
+<source>Agent</source>
+<target>Агент</target>
+<source>Open</source>
+<target>Отворено</target>
+<source> Agent Successfully Created </source>
+<target> Агентът беше създаден </target>
+<source>View Agents</source>
+<target>Виж Агентите</target>
+<source>Name:</source>
+<target>Име:</target>
+<source>Description:</source>
+<target>Описание:</target>
+<source>System Message:</source>
+<target>Системни Съобщения:</target>
+<source>Model:</source>
+<target>Модел:</target>
+<source>Submit</source>
+<target>Създай</target>
+<source>Create Chat Model</source>
+<target>Създай Чат Модел</target>
+<source> Chat Model Successfully Created </source>
+<target> Чат моделът беше успешно създаден </target>
+<source>View Models</source>
+<target>Виж Моделите</target>
+<source>Type:</source>
+<target>Тип:</target>
+<source>API Key:</source>
+<target>Ключ за достъп:</target>
+<source> API Key is required </source>
+<target> Ключът за достъп е задължителен </target>
+<source>View Messages</source>
+<target>Виж Съобещнията</target>
+<source>Message:</source>
+<target>Съобщение:</target>
+<source>AI Hub</source>
+<target>Централа за Изкуствен Интелект</target>
+<source>One place for all things AI</source>
+<target>Едното място за всико свързано с изкуствен интелект</target>
+<source>Home</source>
+<target>Начална Страница</target>
+<source>System Messages</source>
+<target>Системни Съобщения</target>
+<source>Agents</source>
+<target>Агенти</target>
+<source>Settings</source>
+<target>Настройки</target>
+<source>Sign out</source>
+<target>Излез</target>
+<source>Welcome </source>
+<target>Добре дошли </target>
+<source>Get the best out of AI</source>
+<target>Извлчеи най-доборото от изкуствения интелект</target>
+<source>Customize the AI model</source>
+<target>Настрой изкуствения интелект</target>
+<source>Message &amp; Model</source>
+<target>Съобщение и Модел</target>
+<source>Talk to someone or something</source>
+<target>Говори с някого или с нещо</target>
+<source>User Information</source>
+<target>Потребителска информация</target>
+<source>Get to know yourself</source>
+<target>Опознай се</target>
+<source>Username</source>
+<target>Потребителско име</target>
+<source>Enter your username</source>
+<target>Въведи потребителско име</target>
+<source> Username is required </source>
+<target> Потребителското име е задължително </target>
+<source>Password</source>
+<target>Парола</target>
+<source>Enter your password</source>
+<target>Въведи парола</target>
+<source> Password is required </source>
+<target> Паролата е задължителна </target>
+<source>Login</source>
+<target>Вход</target>
+<source>If you don&apos;t have an account,</source>
+<target>Ако нямаш акаунт,</target>
+<source>register here</source>
+<target>регистрай се тук</target>
+<source>Register</source>
+<target>Регистрирай се</target>
+<source>If you already have an account, </source>
+<target>Ако вече има потребителски акаунт, </target>
+<source>login here</source>
+<target>влез тук</target>
+<source>Message</source>
+<target>Съобщение</target>
+<source> User Information Successfully Updated </source>
+<target> Потребителската информация беше обновена </target>
+<source> An error occurred: <x id="INTERPOLATION" equiv-text="{{ error }}"/> </source>
+<target> Възникна грешка: <x id="INTERPOLATION" equiv-text="{{ error }}"/> </target>
+<source>Username: </source>
+<target>Потребителско име: </target>
+<source>Password: </source>
+<target>Парола: </target>
+<source>Edit</source>
+<target>Промени</target>
+<source>Save</source>
+<target>Запази</target>

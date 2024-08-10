@@ -2,6 +2,7 @@
   <ui5-card-header
     slot="header"
     title-text="System Messages"
+    i18n-title-text
     [additionalText]="messages?.length"
   >
     <ui5-icon name="letter" slot="avatar"></ui5-icon>
@@ -15,7 +16,7 @@
   </ui5-card-header>
 
   <div>
-    <ui5-table slot="content" no-data-text="No Data">
+    <ui5-table slot="content" i18n-no-data-text no-data-text="No Data">
       <ui5-table-column slot="columns">
         <span i18n>Type</span>
       </ui5-table-column>

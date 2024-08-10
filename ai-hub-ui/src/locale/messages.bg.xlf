@@ -118,6 +118,26 @@
           <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="6537626382528513237" datatype="html">
+        <source>Audit Logs</source>
+        <target>Логове за проследимост</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/audit-logs/audit-logs.component.html</context>
+          <context context-type="linenumber">4,5</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/header/header.component.html</context>
+          <context context-type="linenumber">39,40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4689418817931871897" datatype="html">
+        <source>Action Log</source>
+        <target>Действие</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/audit-logs/audit-logs.component.html</context>
+          <context context-type="linenumber">21,22</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="2018668027870441529" datatype="html">
         <source>Chat Models</source>
         <target>Чат Модели</target>
@@ -148,7 +168,7 @@
       </trans-unit>
       <trans-unit id="677638568866368552" datatype="html">
         <source>AI Chat Model</source>
-        <target>Изксутвен Интелект Модели</target>
+        <target>Изкуствен Интелект Чат Модел</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/chat/chat.component.html</context>
           <context context-type="linenumber">2,3</context>
@@ -180,7 +200,7 @@
       </trans-unit>
       <trans-unit id="4207916966377787111" datatype="html">
         <source>Created</source>
-        <target>Създадено</target>
+        <target>Създаено</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/chats/chats.component.html</context>
           <context context-type="linenumber">14,15</context>
@@ -196,7 +216,7 @@
       </trans-unit>
       <trans-unit id="7593555694782789615" datatype="html">
         <source>Open</source>
-        <target>Отвори</target>
+        <target>Отворено</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/chats/chats.component.html</context>
           <context context-type="linenumber">35</context>
@@ -204,7 +224,7 @@
       </trans-unit>
       <trans-unit id="5720018434595441264" datatype="html">
         <source> Agent Successfully Created </source>
-        <target> Агентът е успешно създаден </target>
+        <target> Агентът беше създаден </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/create-agent/create-agent.component.html</context>
           <context context-type="linenumber">12,13</context>
@@ -288,7 +308,7 @@
       </trans-unit>
       <trans-unit id="7402369510977076674" datatype="html">
         <source> Chat Model Successfully Created </source>
-        <target> Чат Моделът е уепсшно създаден </target>
+        <target> Чат моделът беше успешно създаден </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/create-chat-model/create-chat-model.component.html</context>
           <context context-type="linenumber">10,11</context>
@@ -332,7 +352,7 @@
       </trans-unit>
       <trans-unit id="8120573889944352153" datatype="html">
         <source>View Messages</source>
-        <target>Виж Съобщенията</target>
+        <target>Виж Съобещнията</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/create-message/create-message.component.html</context>
           <context context-type="linenumber">16</context>
@@ -356,7 +376,7 @@
       </trans-unit>
       <trans-unit id="7608562499910579096" datatype="html">
         <source>One place for all things AI</source>
-        <target>Едното място за всичко свързано с изкуствен интелект</target>
+        <target>Едното място за всико свързано с изкуствен интелект</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.component.html</context>
           <context context-type="linenumber">6,7</context>
@@ -364,7 +384,7 @@
       </trans-unit>
       <trans-unit id="2821179408673282599" datatype="html">
         <source>Home</source>
-        <target>Начална страница</target>
+        <target>Начална Страница</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.component.html</context>
           <context context-type="linenumber">19,20</context>
@@ -396,7 +416,7 @@
       </trans-unit>
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>
-        <source>Настройки</source>
+        <target>Настройки</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.component.html</context>
           <context context-type="linenumber">37,38</context>
@@ -404,10 +424,10 @@
       </trans-unit>
       <trans-unit id="2949848596707725099" datatype="html">
         <source>Sign out</source>
-        <source>Излез</source>
+        <target>Излез</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.component.html</context>
-          <context context-type="linenumber">38,39</context>
+          <context context-type="linenumber">41,42</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2181607301835963404" datatype="html">
@@ -420,14 +440,15 @@
       </trans-unit>
       <trans-unit id="1175204368846270712" datatype="html">
         <source>Get the best out of AI</source>
-        <target>Излвчи най-дорбото от изксутвения интелект</target>
+        <target>Извлчеи най-доборото от изкуствения интелект</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/home/home.component.html</context>
           <context context-type="linenumber">9,10</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8232492980522371218" datatype="html">
-        <source>Настрой своя изкуствен интелект</source>
+        <source>Customize the AI model</source>
+        <target>Настрой изкуствения интелект</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/home/home.component.html</context>
           <context context-type="linenumber">18,19</context>
@@ -435,7 +456,7 @@
       </trans-unit>
       <trans-unit id="5057236912733733906" datatype="html">
         <source>Message &amp; Model</source>
-        <target>Съощение &amp; Модел</target>
+        <target>Съобщение и Модел</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/home/home.component.html</context>
           <context context-type="linenumber">26,27</context>
@@ -443,7 +464,7 @@
       </trans-unit>
       <trans-unit id="4158274024588542988" datatype="html">
         <source>Talk to someone or something</source>
-        <target>Говори си с някой или с нещо</target>
+        <target>Говори с някого или с нещо</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/home/home.component.html</context>
           <context context-type="linenumber">34,35</context>
@@ -451,7 +472,7 @@
       </trans-unit>
       <trans-unit id="6309181788204949218" datatype="html">
         <source>User Information</source>
-        <target>Потеребителска Информация</target>
+        <target>Потребителска информация</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/home/home.component.html</context>
           <context context-type="linenumber">40,41</context>
@@ -459,6 +480,26 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user-settings/user-settings.component.html</context>
           <context context-type="linenumber">2,4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4627725927234237190" datatype="html">
+        <source>No Data</source>
+        <target>Без Данни</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/agents/agents.component.html</context>
+          <context context-type="linenumber">19,20</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/chat-models/chat-models.component.html</context>
+          <context context-type="linenumber">20,21</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/chats/chats.component.html</context>
+          <context context-type="linenumber">12,13</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/system-messages/system-messages.component.html</context>
+          <context context-type="linenumber">19,20</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3267074625073113639" datatype="html">
@@ -483,7 +524,7 @@
       </trans-unit>
       <trans-unit id="4327001039034401261" datatype="html">
         <source>Enter your username</source>
-        <target>Виведи потебителско име</target>
+        <target>Въведи потребителско име</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/login/login.component.html</context>
           <context context-type="linenumber">14,15</context>
@@ -499,7 +540,7 @@
       </trans-unit>
       <trans-unit id="1517103645540207391" datatype="html">
         <source> Username is required </source>
-        <target> Потребителско име е задъжително </target>
+        <target> Потребителското име е задължително </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/login/login.component.html</context>
           <context context-type="linenumber">25,26</context>
@@ -567,7 +608,7 @@
       </trans-unit>
       <trans-unit id="8237790405023611317" datatype="html">
         <source>register here</source>
-        <target>се регистрирай тук</target>
+        <target>регистрай се тук</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/login/login.component.html</context>
           <context context-type="linenumber">61,62</context>
@@ -591,7 +632,7 @@
       </trans-unit>
       <trans-unit id="2245029074942987308" datatype="html">
         <source>login here</source>
-        <target>влезни тук</target>
+        <target>влез тук</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/register/register.component.html</context>
           <context context-type="linenumber">61,62</context>
@@ -607,7 +648,7 @@
       </trans-unit>
       <trans-unit id="4672468267151869871" datatype="html">
         <source> User Information Successfully Updated </source>
-        <target> Потребителска информация беше обновена </target>
+        <target> Потребителската информация беше обновена </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user-settings/user-settings.component.html</context>
           <context context-type="linenumber">12,13</context>
@@ -615,7 +656,7 @@
       </trans-unit>
       <trans-unit id="2627952559025508854" datatype="html">
         <source> An error occurred: <x id="INTERPOLATION" equiv-text="{{ error }}"/> </source>
-        <target> Имаше проблем: <x id="INTERPOLATION" equiv-text="{{ error }}"/> </target>
+        <target> Възникна грешка: <x id="INTERPOLATION" equiv-text="{{ error }}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user-settings/user-settings.component.html</context>
           <context context-type="linenumber">22,23</context>
@@ -623,7 +664,7 @@
       </trans-unit>
       <trans-unit id="5625146011024730344" datatype="html">
         <source>Username: </source>
-        <target>Портебителско име: </target>
+        <target>Потребителско име: </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user-settings/user-settings.component.html</context>
           <context context-type="linenumber">25</context>

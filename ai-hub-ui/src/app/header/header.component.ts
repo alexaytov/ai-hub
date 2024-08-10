@@ -52,13 +52,13 @@ export class HeaderComponent {
   }
 
   onNavigate($event: any) {
-    const path = $event.detail.item.innerText.toLowerCase();
-    if (path === 'system messages') {
+    const path = $event.detail.item.attributes.location.value;
+    if (path === 'system-messages') {
       this.router.navigate(['/system-messages']);
       return;
     }
 
-    if (path === 'chat models') {
+    if (path === 'chat-models') {
       this.router.navigate(['/chat-models']);
       return;
     }
