@@ -70,7 +70,7 @@ Currently all controllers are rest controllers.
 ### Mapping
 - Use MapStruct, ModelMapper or another mapping library <span style="color:green;">&#x2714;</span>
 
-### Testing TODO
+### Testing <span style="color:green;">&#x2714;</span>
 - Write Unit & Integration tests for logic, services, repository query methods, helpers, etc.
 - Achieve at least 70% coverage on business logic (Line Coverage).
 
