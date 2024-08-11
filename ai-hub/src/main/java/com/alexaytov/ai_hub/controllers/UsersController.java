@@ -34,7 +34,7 @@ public class UsersController {
     }
 
     @PutMapping("/user")
-    public ResponseEntity<UserDto> changeUsername(@Valid @RequestBody UpdateUserRequest request) {
+    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UpdateUserRequest request) {
         UserDto userDto = userService.updateUser(request);
         userDto.setToken(userAuthenticationProvider.createToken(userDto));
         return ResponseEntity.ok(userDto);

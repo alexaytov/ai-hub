@@ -37,7 +37,7 @@ public class SystemMessagesController {
     public ResponseEntity<SystemMessageDto> createSystemMessage(@Valid @RequestBody SystemMessageDto message) {
         auditLog.postAuditLog("Creating system message");
         SystemMessageDto createdMessage = service.createMessage(message);
-        auditLog.postAuditLog("System message was created");
+        auditLog.postAuditLog("System message was created with id " + createdMessage.getId());
 
         return ResponseEntity.status(201).body(createdMessage);
     }
