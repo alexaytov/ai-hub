@@ -6,7 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import com.alexaytov.ai_hub.model.entities.MessageType;
+import com.alexaytov.ai_hub.model.enums.MessageType;
 import com.alexaytov.ai_hub.model.entities.MessageTypeEntity;
 import com.alexaytov.ai_hub.repositories.MessageTypeRepository;
 
@@ -21,7 +21,7 @@ public class InitMessageTypes implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         if (repository.count() == 0) {
             MessageTypeEntity admin = new MessageTypeEntity();
             admin.setType(MessageType.USER);

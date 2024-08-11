@@ -47,7 +47,7 @@ public class User {
     private List<Agent> agents;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Chat> chats;
+    private List<Chat> chats = new ArrayList<>();
 
     public User() {
     }

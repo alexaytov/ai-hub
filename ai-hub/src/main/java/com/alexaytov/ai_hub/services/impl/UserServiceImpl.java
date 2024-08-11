@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(credentialsDto.username())
             .orElseThrow(() -> new HttpClientErrorException(BAD_REQUEST, UNKNOWN_USER));
 
-        if (passwordEncoder.matches(CharBuffer.wrap(credentialsDto.password()), user.getPassword())) {
+        if (passwordEncoder.matches(credentialsDto.password(), user.getPassword())) {
             return toUserDto(user);
         }
 
@@ -97,8 +97,14 @@ public class UserServiceImpl implements UserService {
         return toUserDto(user);
     }
 
+    @Override
+    public void save(User user) {
+        userRepository.save(user);
+    }
+
     private UserDto toUserDto(User user) {
         UserDto dto = new UserDto();
+        dto.setId(user.getId());
         dto.setUsername(user.getUsername());
         dto.setRoles(user.getRoles().stream().map(UserRoleEntity::getRole).toList());
         return dto;

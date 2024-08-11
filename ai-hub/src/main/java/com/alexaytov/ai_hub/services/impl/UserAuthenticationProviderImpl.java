@@ -23,8 +23,12 @@ import jakarta.annotation.PostConstruct;
 @Component
 public class UserAuthenticationProviderImpl implements UserAuthenticationProvider {
 
-    @Value("${security.jwt.token.secret-key}")
+
     private String secretKey;
+
+    public UserAuthenticationProviderImpl(@Value("${security.jwt.token.secret-key}") String secretKey) {
+        this.secretKey = secretKey;
+    }
 
     @PostConstruct
     public void init() {

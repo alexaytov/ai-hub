@@ -21,7 +21,7 @@ public class InitUserRoles implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         if (repository.count() == 0) {
             UserRoleEntity admin = new UserRoleEntity();
             admin.setRole(UserRole.ADMIN);

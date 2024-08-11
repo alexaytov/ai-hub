@@ -62,7 +62,11 @@ public class SystemMessageServiceImpl implements SystemMessageService {
     @Override
     public void deleteMessage(Long id) {
         User user = userService.getUser();
-        SystemMessage message = repository.findById(id).orElseThrow(() -> new HttpClientErrorException(NOT_FOUND, "Not found"));
+        SystemMessage message = repository.findById(id).orElse(null);
+
+        if (message == null) {
+            return;
+        }
 
         if (message.getUser().getId().equals(user.getId())) {
             repository.delete(message);

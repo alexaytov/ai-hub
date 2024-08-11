@@ -73,16 +73,19 @@ public class ModelServiceImpl implements ModelService {
     @Override
     public List<AIModelDto> getModels() {
         return repository.findAll().stream()
-            .map(model -> mapper.map(model, AIModelDto.class))
+            .map(model -> {
+                AIModelDto dto = mapper.map(model, AIModelDto.class);
+                dto.setType(model.getType().getType());
+                dto.clearApiKey();
+                return dto;
+            })
             .toList();
     }
 
     @Override
     public AIModelDto getModel(Long id) {
-        AIModel model = repository.findById(id).orElse(null);
-        if (model == null) {
-            throw new HttpClientErrorException(NOT_FOUND, "Model not found");
-        }
+        AIModel model = repository.findById(id)
+            .orElseThrow(() -> new HttpClientErrorException(NOT_FOUND, "Model not found"));
 
         AIModelDto dto = mapper.map(model, AIModelDto.class);
         dto.setType(model.getType().getType());

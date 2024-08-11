@@ -1,6 +1,6 @@
 package com.alexaytov.ai_hub.model.dtos;
 
-import com.alexaytov.ai_hub.model.entities.MessageType;
+import com.alexaytov.ai_hub.model.enums.MessageType;
 
 public class ChatMessageDto {
 

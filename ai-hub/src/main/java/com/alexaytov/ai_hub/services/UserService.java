@@ -14,4 +14,6 @@ public interface UserService {
     UserDto register(SignUpDto userDto);
 
     UserDto updateUser(UpdateUserRequest request);
+
+    void save(User save);
 }

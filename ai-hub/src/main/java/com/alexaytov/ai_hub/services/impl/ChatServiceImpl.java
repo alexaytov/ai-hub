@@ -3,8 +3,12 @@ package com.alexaytov.ai_hub.services.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -16,19 +20,19 @@ import com.alexaytov.ai_hub.model.dtos.GetChatResponse;
 import com.alexaytov.ai_hub.model.dtos.QueryResponseDto;
 import com.alexaytov.ai_hub.model.entities.Agent;
 import com.alexaytov.ai_hub.model.entities.Chat;
-import com.alexaytov.ai_hub.model.entities.MessageType;
+import com.alexaytov.ai_hub.model.enums.MessageType;
 import com.alexaytov.ai_hub.model.entities.User;
 import com.alexaytov.ai_hub.repositories.AgentRepository;
 import com.alexaytov.ai_hub.repositories.ChatRepository;
 import com.alexaytov.ai_hub.repositories.MessageTypeRepository;
 import com.alexaytov.ai_hub.repositories.ModelRepository;
-import com.alexaytov.ai_hub.repositories.UserRepository;
 import com.alexaytov.ai_hub.services.ChatService;
 import com.alexaytov.ai_hub.services.UserService;
 import com.alexaytov.ai_hub.utils.Encryption;
 
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import jakarta.transaction.Transactional;
@@ -37,7 +41,8 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @Service
 public class ChatServiceImpl implements ChatService {
 
-    private final UserRepository userRepository;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChatServiceImpl.class);
+
     private final UserService userService;
     private final ChatRepository repository;
     private final AgentRepository agentRepository;
@@ -45,9 +50,10 @@ public class ChatServiceImpl implements ChatService {
     private final ChatRepository chatRepository;
     private final Encryption encryption;
     private final MessageTypeRepository typeRepository;
+    private final Supplier<Long> timeSupplier;
 
-    public ChatServiceImpl(UserRepository userRepository, UserService userService, ChatRepository repository, AgentRepository agentRepository, ModelRepository modelRepository, ChatRepository chatRepository, Encryption encryption, MessageTypeRepository typeRepository) {
-        this.userRepository = userRepository;
+    @Autowired
+    public ChatServiceImpl(UserService userService, ChatRepository repository, AgentRepository agentRepository, ModelRepository modelRepository, ChatRepository chatRepository, Encryption encryption, MessageTypeRepository typeRepository) {
         this.userService = userService;
         this.repository = repository;
         this.agentRepository = agentRepository;
@@ -55,7 +61,27 @@ public class ChatServiceImpl implements ChatService {
         this.chatRepository = chatRepository;
         this.encryption = encryption;
         this.typeRepository = typeRepository;
+        timeSupplier = System::currentTimeMillis;
     }
+
+    ChatServiceImpl(UserService userService,
+                    ChatRepository repository,
+                    AgentRepository agentRepository,
+                    ModelRepository modelRepository,
+                    ChatRepository chatRepository,
+                    Encryption encryption,
+                    MessageTypeRepository typeRepository,
+                    Supplier<Long> timeSupplier) {
+        this.userService = userService;
+        this.repository = repository;
+        this.agentRepository = agentRepository;
+        this.modelRepository = modelRepository;
+        this.chatRepository = chatRepository;
+        this.encryption = encryption;
+        this.typeRepository = typeRepository;
+        this.timeSupplier = timeSupplier;
+    }
+
 
     @Override
     public QueryResponseDto query(Long chatId, ChatModelQueryDto query) {
@@ -66,8 +92,26 @@ public class ChatServiceImpl implements ChatService {
 
         String apiKey = encryption.decrypt(chat.getModel().getApiKey());
         OpenAiChatModel model = OpenAiChatModel.withApiKey(apiKey);
+        List<ChatMessage> messages = buildMessages(query, chat);
 
-        List<ChatMessage> messages = chat.getMessages().stream()
+        String response = generateResponse(model, messages);
+        saveChatMessage(response, chat);
+
+        QueryResponseDto responseDto = new QueryResponseDto();
+        responseDto.setContent(response);
+
+        return responseDto;
+    }
+
+    private static List<ChatMessage> buildMessages(ChatModelQueryDto query, Chat chat) {
+        ArrayList<ChatMessage> messages = new ArrayList<>();
+
+        if (chat.getAgent() != null) {
+            String message = chat.getAgent().getSystemMessage().getMessage();
+            messages.add(new SystemMessage(message));
+        }
+
+        List<ChatMessage> allMesages = chat.getMessages().stream()
             .flatMap(msg -> {
                 if (msg.getType().getType() == MessageType.USER) {
                     return Stream.of(new UserMessage(msg.getContent()));
@@ -80,33 +124,32 @@ public class ChatServiceImpl implements ChatService {
             })
             .toList();
 
-        int size = messages.size();
-        messages = messages.stream()
+        int size = allMesages.size();
+        allMesages.stream()
             .skip(size > 9 ? size - 9 : 0)
             .limit(9)
-            .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+            .forEach(messages::add);
         messages.add(new UserMessage(query.getContent()));
 
+        return messages;
+    }
 
-        String response;
+    private static String generateResponse(OpenAiChatModel model, List<ChatMessage> messages) {
         try {
-            response = model.generate(messages).content().text();
+            return model.generate(messages).content().text();
         } catch (Exception ex) {
-            response = "An error occurred while processing the request. Please try again later.";
+            LOGGER.error("Error while generating response", ex);
+            return "An error occurred while processing the request. Please try again later.";
         }
+    }
 
+    private void saveChatMessage(String response, Chat chat) {
         com.alexaytov.ai_hub.model.entities.ChatMessage newMessage = new com.alexaytov.ai_hub.model.entities.ChatMessage();
         newMessage.setContent(response);
         newMessage.setType(typeRepository.findByType(MessageType.ASSISTANT));
 
         chat.getMessages().add(newMessage);
         chatRepository.save(chat);
-
-        QueryResponseDto responseDto = new QueryResponseDto();
-        responseDto.setRole("assistant");
-        responseDto.setContent(response);
-
-        return responseDto;
     }
 
     @Override
@@ -119,12 +162,13 @@ public class ChatServiceImpl implements ChatService {
                 .orElseThrow(() -> new HttpClientErrorException(BAD_REQUEST, "Agent not found"));
 
             Chat chat = new Chat();
+            chat.setAgent(agent);
             chat.setModel(agent.getModel());
             chat.setUser(user);
             repository.save(chat);
 
             user.getChats().add(chat);
-            userRepository.save(user);
+            userService.save(user);
 
             ChatDto created = new ChatDto();
             created.setId(chat.getId());
@@ -143,7 +187,7 @@ public class ChatServiceImpl implements ChatService {
             repository.save(chat);
 
             user.getChats().add(chat);
-            userRepository.save(user);
+            userService.save(user);
 
             ChatDto created = new ChatDto();
             created.setId(chat.getId());
@@ -160,7 +204,7 @@ public class ChatServiceImpl implements ChatService {
         User user = userService.getUser();
 
         Optional<Chat> chat = repository.findById(id)
-            .filter(c -> c.getModel().getUser().getId().equals(user.getId()));
+            .filter(c -> c.getUser().getId().equals(user.getId()));
 
         if (chat.isEmpty()) {
             return;
@@ -193,8 +237,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public List<ChatDto> getChats() {
-        return repository.findAll().stream()
-            .filter(chat -> chat.getUser().getId().equals(userService.getUser().getId()))
+        return userService.getUser().getChats().stream()
             .map(c -> {
                 ChatDto dto = new ChatDto();
                 dto.setId(c.getId());
@@ -216,11 +259,11 @@ public class ChatServiceImpl implements ChatService {
     @Transactional
     public void deleteOlderThan(long milliseconds) {
         chatRepository.findAll().stream()
-            .filter(chat -> System.currentTimeMillis() - chat.getCreated() < milliseconds)
+            .filter(chat -> timeSupplier.get() - chat.getCreated() < milliseconds)
             .forEach(chat -> {
                 chat.setUser(null);
                 chatRepository.save(chat);
-                chatRepository.delete(chat);
+                chatRepository.deleteById(chat.getId());
             });
     }
 }
