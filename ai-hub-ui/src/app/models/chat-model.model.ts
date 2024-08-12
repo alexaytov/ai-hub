@@ -4,4 +4,5 @@ export interface ChatModel {
   description?: string;
   type?: string;
   apiKey?: string;
+  parameters?: object;
 }

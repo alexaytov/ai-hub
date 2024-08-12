@@ -27,6 +27,7 @@ import com.alexaytov.ai_hub.repositories.ChatMessageRepository;
 import com.alexaytov.ai_hub.repositories.ChatRepository;
 import com.alexaytov.ai_hub.repositories.MessageTypeRepository;
 import com.alexaytov.ai_hub.repositories.ModelRepository;
+import com.alexaytov.ai_hub.services.AIService;
 import com.alexaytov.ai_hub.services.ChatService;
 import com.alexaytov.ai_hub.services.UserService;
 import com.alexaytov.ai_hub.utils.Encryption;
@@ -35,7 +36,7 @@ import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
-import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.model.chat.ChatLanguageModel;
 import jakarta.transaction.Transactional;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -53,9 +54,10 @@ public class ChatServiceImpl implements ChatService {
     private final MessageTypeRepository typeRepository;
     private final Supplier<Long> timeSupplier;
     private final ChatMessageRepository chatMessageRepository;
+    private final AIService aiService;
 
     @Autowired
-    public ChatServiceImpl(UserService userService, ChatRepository repository, AgentRepository agentRepository, ModelRepository modelRepository, ChatRepository chatRepository, Encryption encryption, MessageTypeRepository typeRepository, ChatMessageRepository chatMessageRepository) {
+    public ChatServiceImpl(UserService userService, ChatRepository repository, AgentRepository agentRepository, ModelRepository modelRepository, ChatRepository chatRepository, Encryption encryption, MessageTypeRepository typeRepository, ChatMessageRepository chatMessageRepository, AIService aiService) {
         this.userService = userService;
         this.repository = repository;
         this.agentRepository = agentRepository;
@@ -64,6 +66,7 @@ public class ChatServiceImpl implements ChatService {
         this.encryption = encryption;
         this.typeRepository = typeRepository;
         this.chatMessageRepository = chatMessageRepository;
+        this.aiService = aiService;
         timeSupplier = System::currentTimeMillis;
     }
 
@@ -75,7 +78,7 @@ public class ChatServiceImpl implements ChatService {
                     Encryption encryption,
                     MessageTypeRepository typeRepository,
                     ChatMessageRepository chatMessageRepository,
-                    Supplier<Long> timeSupplier) {
+                    Supplier<Long> timeSupplier, AIService aiService) {
         this.userService = userService;
         this.repository = repository;
         this.agentRepository = agentRepository;
@@ -85,6 +88,7 @@ public class ChatServiceImpl implements ChatService {
         this.typeRepository = typeRepository;
         this.chatMessageRepository = chatMessageRepository;
         this.timeSupplier = timeSupplier;
+        this.aiService = aiService;
     }
 
 
@@ -96,7 +100,7 @@ public class ChatServiceImpl implements ChatService {
             .orElseThrow(() -> new HttpClientErrorException(BAD_REQUEST, "Chat not found"));
 
         String apiKey = encryption.decrypt(chat.getModel().getApiKey());
-        OpenAiChatModel model = OpenAiChatModel.withApiKey(apiKey);
+        ChatLanguageModel model = aiService.getModel(chat.getModel().getType().getType(), apiKey, chat.getModel().getParameters());
         List<ChatMessage> messages = buildMessages(query, chat);
 
         String response = generateResponse(model, messages);
@@ -139,7 +143,7 @@ public class ChatServiceImpl implements ChatService {
         return messages;
     }
 
-    private static String generateResponse(OpenAiChatModel model, List<ChatMessage> messages) {
+    private static String generateResponse(ChatLanguageModel model, List<ChatMessage> messages) {
         try {
             return model.generate(messages).content().text();
         } catch (Exception ex) {

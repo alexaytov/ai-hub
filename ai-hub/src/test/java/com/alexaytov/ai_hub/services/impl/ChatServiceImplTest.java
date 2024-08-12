@@ -25,6 +25,7 @@ import com.alexaytov.ai_hub.repositories.ChatMessageRepository;
 import com.alexaytov.ai_hub.repositories.ChatRepository;
 import com.alexaytov.ai_hub.repositories.MessageTypeRepository;
 import com.alexaytov.ai_hub.repositories.ModelRepository;
+import com.alexaytov.ai_hub.services.AIService;
 import com.alexaytov.ai_hub.services.UserService;
 import com.alexaytov.ai_hub.utils.Encryption;
 
@@ -44,6 +45,8 @@ class ChatServiceImplTest {
     private Encryption encryption;
     private MessageTypeRepository typeRepository;
     private ChatMessageRepository messageRepository;
+    private AIService aiService;
+
 
     private ChatServiceImpl classUnderTest;
 
@@ -56,6 +59,7 @@ class ChatServiceImplTest {
         modelRepository = mock(ModelRepository.class);
         encryption = mock(Encryption.class);
         typeRepository = mock(MessageTypeRepository.class);
+        aiService = mock(AIService.class);
 
         classUnderTest = new ChatServiceImpl(
             userService,
@@ -65,7 +69,8 @@ class ChatServiceImplTest {
             chatRepository,
             encryption,
             typeRepository,
-            messageRepository
+            messageRepository,
+            aiService
         );
     }
 
@@ -206,7 +211,8 @@ class ChatServiceImplTest {
             encryption,
             typeRepository,
             messageRepository,
-            () -> now
+            () -> now,
+            aiService
         );
 
         Chat chat = new Chat();

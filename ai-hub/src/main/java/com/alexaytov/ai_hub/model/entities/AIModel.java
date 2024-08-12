@@ -37,7 +37,7 @@ public class AIModel {
     @JoinColumn(name = "type_id", nullable = false)
     AIModelTypeEntity type;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     String apiKey;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

@@ -1,5 +1,11 @@
 import { CommonModule, NgFor } from '@angular/common';
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import {
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -40,6 +46,8 @@ import { Error } from '../models/error.model';
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CreateChatModelComponent implements OnInit {
+  @ViewChild('typeSelector') typeSelector: ElementRef | undefined;
+
   model: ChatModel = {};
   form: FormGroup;
   error: string | undefined;
@@ -86,11 +94,23 @@ export class CreateChatModelComponent implements OnInit {
       return;
     }
 
+    const type = this.typeSelector?.nativeElement.value;
+
     const model: ChatModel = {
       name: this.form.value.name,
       description: this.form.value.description,
-      type: ChatModelType.OPEN_AI,
+      type: type,
       apiKey: this.form.value.apiKey,
+      parameters: this.form.value.parameters.reduce(
+        (
+          acc: { [x: string]: any },
+          curr: { key: string | number; value: any }
+        ) => {
+          acc[curr.key] = curr.value;
+          return acc;
+        },
+        {}
+      ),
     };
 
     this.axios

@@ -19,7 +19,7 @@ public class ChatMessage {
     @ManyToOne
     private MessageTypeEntity type;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10_000)
     private String content;
 
     @ManyToOne

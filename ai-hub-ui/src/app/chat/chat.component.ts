@@ -20,6 +20,7 @@ import '@ui5/webcomponents-compat/dist/TableCell.js';
 import '@ui5/webcomponents/dist/Card.js';
 import '@ui5/webcomponents/dist/CardHeader.js';
 import '@ui5/webcomponents/dist/Tag.js';
+import { MarkdownService } from 'ngx-markdown';
 
 @Component({
   selector: 'app-chat',
