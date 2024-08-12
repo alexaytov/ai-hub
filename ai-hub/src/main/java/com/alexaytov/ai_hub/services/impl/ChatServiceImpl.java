@@ -20,8 +20,8 @@ import com.alexaytov.ai_hub.model.dtos.GetChatResponse;
 import com.alexaytov.ai_hub.model.dtos.QueryResponseDto;
 import com.alexaytov.ai_hub.model.entities.Agent;
 import com.alexaytov.ai_hub.model.entities.Chat;
-import com.alexaytov.ai_hub.model.enums.MessageType;
 import com.alexaytov.ai_hub.model.entities.User;
+import com.alexaytov.ai_hub.model.enums.MessageType;
 import com.alexaytov.ai_hub.repositories.AgentRepository;
 import com.alexaytov.ai_hub.repositories.ChatMessageRepository;
 import com.alexaytov.ai_hub.repositories.ChatRepository;
@@ -242,6 +242,10 @@ public class ChatServiceImpl implements ChatService {
             }).toList();
         GetChatResponse response = new GetChatResponse();
         response.setMessages(messages);
+        response.setModelId(chat.getModel().getId());
+        if (chat.getAgent() != null) {
+            response.setAgentId(chat.getAgent().getId());
+        }
         return response;
     }
 

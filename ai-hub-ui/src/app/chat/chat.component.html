@@ -1,5 +1,9 @@
 <div class="chat-container">
-  <h1 i18n>AI Chat Model</h1>
+  <h1 i18n>Chat</h1>
+  <div class="chat-header">
+    <p *ngIf="modelName">Model: {{ modelName }}</p>
+    <p *ngIf="agentName">Agent: {{ agentName }}</p>
+  </div>
   <section #chatWindow id="chatWindow" class="chat-window">
     <ng-container *ngFor="let message of chat?.messages">
       <div

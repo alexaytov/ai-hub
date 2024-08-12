@@ -34,6 +34,8 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   @ViewChild('chatWindow', { static: true }) chatWindow: ElementRef | undefined;
 
   chat: ChatContent | undefined;
+  modelName: string | undefined;
+  agentName: string | undefined;
   chatId: number | null = null;
 
   constructor(
@@ -55,6 +57,30 @@ export class ChatComponent implements OnInit, AfterViewChecked {
         this.axios.request('GET', `/chats/${id}`).then(
           (response) => {
             this.chat = response.data;
+
+            if (this.chat?.modelId) {
+              this.axios
+                .request('GET', `/chat-models/${this.chat.modelId}`)
+                .then(
+                  (response) => {
+                    this.modelName = response.data.name;
+                  },
+                  (error) => {
+                    console.error(error);
+                  }
+                );
+            }
+
+            if (this.chat?.agentId) {
+              this.axios.request('GET', `/agents/${this.chat.agentId}`).then(
+                (response) => {
+                  this.agentName = response.data.name;
+                },
+                (error) => {
+                  console.error(error);
+                }
+              );
+            }
           },
           (error) => {
             console.error(error);
@@ -73,7 +99,6 @@ export class ChatComponent implements OnInit, AfterViewChecked {
       if (this.chatWindow) {
         this.chatWindow.nativeElement.scrollTop =
           this.chatWindow.nativeElement.scrollHeight;
-        console.log('here');
       }
     } catch (err) {
       console.error('Could not scroll to bottom:', err);

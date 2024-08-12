@@ -3,6 +3,11 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+}
+
 .chat-container {
   display: flex;
   flex-direction: column;
