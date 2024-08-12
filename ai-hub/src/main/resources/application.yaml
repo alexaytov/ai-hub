@@ -31,7 +31,7 @@ logging:
 server:
   port: 8080
 security.jwt.token.secret-key: my-secret-key
-api-key.secret: ${API_KEY_SECRET:}
+api-key.secret: ${API_KEY_SECRET:XiVTCEWnPSD3/7B2juL4xwecc7vwsVd6CqpHGNwKvZU=}
 audit-log:
   service:
     url: ${AUDIT_LOG_SERVICE_URL:http://localhost:8081}

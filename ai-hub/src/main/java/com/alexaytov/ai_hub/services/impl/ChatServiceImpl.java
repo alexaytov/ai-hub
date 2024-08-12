@@ -23,6 +23,7 @@ import com.alexaytov.ai_hub.model.entities.Chat;
 import com.alexaytov.ai_hub.model.enums.MessageType;
 import com.alexaytov.ai_hub.model.entities.User;
 import com.alexaytov.ai_hub.repositories.AgentRepository;
+import com.alexaytov.ai_hub.repositories.ChatMessageRepository;
 import com.alexaytov.ai_hub.repositories.ChatRepository;
 import com.alexaytov.ai_hub.repositories.MessageTypeRepository;
 import com.alexaytov.ai_hub.repositories.ModelRepository;
@@ -51,9 +52,10 @@ public class ChatServiceImpl implements ChatService {
     private final Encryption encryption;
     private final MessageTypeRepository typeRepository;
     private final Supplier<Long> timeSupplier;
+    private final ChatMessageRepository chatMessageRepository;
 
     @Autowired
-    public ChatServiceImpl(UserService userService, ChatRepository repository, AgentRepository agentRepository, ModelRepository modelRepository, ChatRepository chatRepository, Encryption encryption, MessageTypeRepository typeRepository) {
+    public ChatServiceImpl(UserService userService, ChatRepository repository, AgentRepository agentRepository, ModelRepository modelRepository, ChatRepository chatRepository, Encryption encryption, MessageTypeRepository typeRepository, ChatMessageRepository chatMessageRepository) {
         this.userService = userService;
         this.repository = repository;
         this.agentRepository = agentRepository;
@@ -61,6 +63,7 @@ public class ChatServiceImpl implements ChatService {
         this.chatRepository = chatRepository;
         this.encryption = encryption;
         this.typeRepository = typeRepository;
+        this.chatMessageRepository = chatMessageRepository;
         timeSupplier = System::currentTimeMillis;
     }
 
@@ -71,6 +74,7 @@ public class ChatServiceImpl implements ChatService {
                     ChatRepository chatRepository,
                     Encryption encryption,
                     MessageTypeRepository typeRepository,
+                    ChatMessageRepository chatMessageRepository,
                     Supplier<Long> timeSupplier) {
         this.userService = userService;
         this.repository = repository;
@@ -79,6 +83,7 @@ public class ChatServiceImpl implements ChatService {
         this.chatRepository = chatRepository;
         this.encryption = encryption;
         this.typeRepository = typeRepository;
+        this.chatMessageRepository = chatMessageRepository;
         this.timeSupplier = timeSupplier;
     }
 
@@ -95,7 +100,7 @@ public class ChatServiceImpl implements ChatService {
         List<ChatMessage> messages = buildMessages(query, chat);
 
         String response = generateResponse(model, messages);
-        saveChatMessage(response, chat);
+        saveChatMessage(query.getContent(), response, chat);
 
         QueryResponseDto responseDto = new QueryResponseDto();
         responseDto.setContent(response);
@@ -143,13 +148,18 @@ public class ChatServiceImpl implements ChatService {
         }
     }
 
-    private void saveChatMessage(String response, Chat chat) {
-        com.alexaytov.ai_hub.model.entities.ChatMessage newMessage = new com.alexaytov.ai_hub.model.entities.ChatMessage();
-        newMessage.setContent(response);
-        newMessage.setType(typeRepository.findByType(MessageType.ASSISTANT));
+    private void saveChatMessage(String request, String response, Chat chat) {
+        com.alexaytov.ai_hub.model.entities.ChatMessage requestMsg = new com.alexaytov.ai_hub.model.entities.ChatMessage();
+        requestMsg.setContent(request);
+        requestMsg.setType(typeRepository.findByType(MessageType.USER));
+        requestMsg.setChat(chat);
 
-        chat.getMessages().add(newMessage);
-        chatRepository.save(chat);
+        com.alexaytov.ai_hub.model.entities.ChatMessage responseMsg = new com.alexaytov.ai_hub.model.entities.ChatMessage();
+        responseMsg.setContent(response);
+        responseMsg.setType(typeRepository.findByType(MessageType.ASSISTANT));
+        responseMsg.setChat(chat);
+
+        chatMessageRepository.saveAll(List.of(requestMsg, responseMsg));
     }
 
     @Override

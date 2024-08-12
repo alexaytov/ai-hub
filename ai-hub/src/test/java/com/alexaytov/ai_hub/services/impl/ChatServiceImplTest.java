@@ -17,10 +17,11 @@ import com.alexaytov.ai_hub.model.entities.AIModel;
 import com.alexaytov.ai_hub.model.entities.Agent;
 import com.alexaytov.ai_hub.model.entities.Chat;
 import com.alexaytov.ai_hub.model.entities.ChatMessage;
-import com.alexaytov.ai_hub.model.enums.MessageType;
 import com.alexaytov.ai_hub.model.entities.MessageTypeEntity;
 import com.alexaytov.ai_hub.model.entities.User;
+import com.alexaytov.ai_hub.model.enums.MessageType;
 import com.alexaytov.ai_hub.repositories.AgentRepository;
+import com.alexaytov.ai_hub.repositories.ChatMessageRepository;
 import com.alexaytov.ai_hub.repositories.ChatRepository;
 import com.alexaytov.ai_hub.repositories.MessageTypeRepository;
 import com.alexaytov.ai_hub.repositories.ModelRepository;
@@ -42,10 +43,13 @@ class ChatServiceImplTest {
     private ModelRepository modelRepository;
     private Encryption encryption;
     private MessageTypeRepository typeRepository;
+    private ChatMessageRepository messageRepository;
+
     private ChatServiceImpl classUnderTest;
 
     @BeforeEach
     void setUp() {
+        messageRepository = mock(ChatMessageRepository.class);
         userService = mock(UserService.class);
         chatRepository = mock(ChatRepository.class);
         agentRepository = mock(AgentRepository.class);
@@ -60,7 +64,8 @@ class ChatServiceImplTest {
             modelRepository,
             chatRepository,
             encryption,
-            typeRepository
+            typeRepository,
+            messageRepository
         );
     }
 
@@ -197,9 +202,10 @@ class ChatServiceImplTest {
             chatRepository,
             agentRepository,
             modelRepository,
-            chatRepository
-            , encryption,
+            chatRepository,
+            encryption,
             typeRepository,
+            messageRepository,
             () -> now
         );
 

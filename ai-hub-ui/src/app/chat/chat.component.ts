@@ -1,4 +1,5 @@
 import {
+  AfterViewChecked,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   ElementRef,
@@ -28,8 +29,9 @@ import '@ui5/webcomponents/dist/Tag.js';
   styleUrl: './chat.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, AfterViewChecked {
   @ViewChild('input') input: ElementRef | undefined;
+  @ViewChild('chatWindow', { static: true }) chatWindow: ElementRef | undefined;
 
   chat: ChatContent | undefined;
   chatId: number | null = null;
@@ -62,6 +64,22 @@ export class ChatComponent implements OnInit {
     });
   }
 
+  ngAfterViewChecked(): void {
+    this.scrollToBottom();
+  }
+
+  private scrollToBottom(): void {
+    try {
+      if (this.chatWindow) {
+        this.chatWindow.nativeElement.scrollTop =
+          this.chatWindow.nativeElement.scrollHeight;
+        console.log('here');
+      }
+    } catch (err) {
+      console.error('Could not scroll to bottom:', err);
+    }
+  }
+
   sendMessage() {
     const message = this.input?.nativeElement.value;
     this.chat?.messages.push({
@@ -90,5 +108,11 @@ export class ChatComponent implements OnInit {
           });
         }
       );
+  }
+
+  onKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.sendMessage();
+    }
   }
 }
