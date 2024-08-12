@@ -19,9 +19,15 @@ public class InitChatModelTypes implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (repository.count() == 0) {
+        if (repository.findByType(AIModelType.OPEN_AI).isEmpty()) {
             AIModelTypeEntity entity = new AIModelTypeEntity();
             entity.setType(AIModelType.OPEN_AI);
+            repository.save(entity);
+        }
+
+        if (repository.findByType(AIModelType.AI_CORE).isEmpty()) {
+            AIModelTypeEntity entity = new AIModelTypeEntity();
+            entity.setType(AIModelType.AI_CORE);
             repository.save(entity);
         }
     }

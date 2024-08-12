@@ -1,9 +1,13 @@
 package com.alexaytov.ai_hub.model.entities;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapKeyColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -44,6 +49,20 @@ public class AIModel {
 
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Chat> chats;
+
+    @ElementCollection
+    @MapKeyColumn(name = "parameter_name")
+    @Column(name = "parameter_value")
+    @CollectionTable(name = "parameters", joinColumns = @JoinColumn(name = "parameter_id"))
+    private Map<String, String> parameters = new HashMap<>();
+
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Map<String, String> parameters) {
+        this.parameters = parameters;
+    }
 
     public List<Chat> getChats() {
         return chats;

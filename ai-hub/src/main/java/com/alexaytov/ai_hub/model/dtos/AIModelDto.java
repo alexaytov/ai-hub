@@ -1,5 +1,8 @@
 package com.alexaytov.ai_hub.model.dtos;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.hibernate.validator.constraints.Length;
 
 import com.alexaytov.ai_hub.model.entities.AIModelType;
@@ -19,10 +22,20 @@ public class AIModelDto {
     private String description;
 
     @NotNull
-    AIModelType type;
+    private AIModelType type;
 
     @NotNull
-    String apiKey;
+    private String apiKey;
+
+    private Map<String, String> parameters = new HashMap<>();
+
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Map<String, String> parameters) {
+        this.parameters = parameters;
+    }
 
     public Long getId() {
         return id;

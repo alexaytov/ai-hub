@@ -1,6 +1,7 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgFor } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import {
+  FormArray,
   FormBuilder,
   FormGroup,
   FormsModule,
@@ -28,6 +29,7 @@ import { Error } from '../models/error.model';
   standalone: true,
   imports: [
     CommonModule,
+    NgFor,
     FormsModule,
     Ui5InputValueAccessorDirective,
     ReactiveFormsModule,
@@ -53,6 +55,7 @@ export class CreateChatModelComponent implements OnInit {
       name: ['', [Validators.required, Validators.maxLength(50)]],
       description: ['', [Validators.required, Validators.maxLength(255)]],
       apiKey: ['', Validators.required],
+      parameters: fb.array([]),
     });
   }
   ngOnInit(): void {
@@ -60,6 +63,19 @@ export class CreateChatModelComponent implements OnInit {
       // Redirect to the login page if the user is not logged in
       this.router.navigate(['/login']);
     }
+  }
+
+  onAddParameter() {
+    console.log(this.form);
+    this.parametersFormArray.push(this.fb.group({ key: '', value: '' }));
+  }
+
+  onRemoveParameter(index: number) {
+    this.parametersFormArray.removeAt(index);
+  }
+
+  get parametersFormArray(): FormArray<FormGroup> {
+    return this.form.get('parameters') as FormArray;
   }
 
   onSubmit() {
