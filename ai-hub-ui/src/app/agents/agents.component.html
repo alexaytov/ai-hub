@@ -42,16 +42,18 @@
           {{ agent.description }}
         </ui5-table-cell>
         <ui5-table-cell>
-          {{ agent.systemMessageId }}
+          {{ models.get(agent.modelId) }}
         </ui5-table-cell>
         <ui5-table-cell>
-          {{ agent.modelId }}
+          {{ systemMessages.get(agent.systemMessageId) }}
         </ui5-table-cell>
-        <ui5-table-cell>
-          <ui5-button i18n design="Negative" (click)="deleteAgent(agent?.id)"
+        <ui5-table-cell class="actions-container">
+          <ui5-button i18n design="Negative" (click)="deleteAgent(agent.id)"
             >Delete</ui5-button
           >
-          <ui5-button i18n design="Information">Chat</ui5-button>
+          <ui5-button i18n design="Information" (click)="onChat(agent.id)"
+            >Chat</ui5-button
+          >
         </ui5-table-cell>
       </ui5-table-row>
     </ui5-table>

@@ -13,6 +13,9 @@ import '@ui5/webcomponents/dist/CardHeader.js';
 import '@ui5/webcomponents/dist/Tag.js';
 import '@ui5/webcomponents-icons/dist/personnel-view.js';
 import { CommonModule } from '@angular/common';
+import { SystemMessage } from '../models/system-message.model';
+import { ChatModel } from '../models/chat-model.model';
+import { AxiosResponse } from 'axios';
 
 @Component({
   selector: 'app-agents',
@@ -28,6 +31,9 @@ export class AgentsComponent implements OnInit {
   agents: any[] | undefined;
   error: string | undefined;
 
+  systemMessages: Map<number, string> = new Map();
+  models: Map<number, string> = new Map();
+
   ngOnInit(): void {
     if (!this.axios.getAuthToken()) {
       // Redirect to the login page if the user is not logged in
@@ -42,6 +48,28 @@ export class AgentsComponent implements OnInit {
       .catch((error) => {
         this.error = error.message;
       });
+
+    this.axios.request('GET', '/chat-models').then(
+      (response: AxiosResponse<ChatModel[]>) => {
+        response.data.forEach((model) => {
+          this.models.set(model.id, model.name);
+        });
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+
+    this.axios
+      .request('GET', '/system-messages')
+      .then((response: AxiosResponse<SystemMessage[]>) => {
+        response.data.forEach((message) => {
+          this.systemMessages.set(message.id, message.message);
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   deleteAgent(id: number) {
@@ -53,6 +81,21 @@ export class AgentsComponent implements OnInit {
         this.error = error.message;
       }
     );
+  }
+
+  onChat(agentId: number | undefined) {
+    this.axios
+      .request('POST', '/chats', {
+        agentId,
+      })
+      .then(
+        (response) => {
+          this.router.navigate([`/chat/${response.data.id}`]);
+        },
+        (error) => {
+          this.error = error.message;
+        }
+      );
   }
 
   onNavigateToCreateAgent() {

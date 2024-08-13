@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 import { AxiosService } from '../services/axios/axios.service';
 import { AuditLog } from '../models/audit-log.model';
 import { CommonModule } from '@angular/common';
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { Error } from '../models/error.model';
 
 @Component({
@@ -38,9 +38,8 @@ export class AuditLogsComponent implements OnInit {
 
     this.axios
       .request('GET', '/audit-logs')
-      .then((response) => {
-        this.logs = response.data;
-        console.log(this.logs);
+      .then((response: AxiosResponse<AuditLog[]>) => {
+        this.logs = response.data.reverse();
       })
       .catch((error: AxiosError<Error>) => {
         if (error.response) {

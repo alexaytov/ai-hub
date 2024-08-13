@@ -5,6 +5,7 @@ import { AxiosService } from '../services/axios/axios.service';
 import { Chat } from '../models/chat.model';
 import { ChatModel } from '../models/chat-model.model';
 import { AxiosResponse } from 'axios';
+import { Agent } from '../models/agent.model';
 
 @Component({
   selector: 'app-chats',
@@ -17,6 +18,7 @@ import { AxiosResponse } from 'axios';
 export class ChatsComponent implements OnInit {
   chats: Chat[] = [];
   models: Map<number | undefined, ChatModel> = new Map();
+  agents: Map<number | undefined, Agent> = new Map();
 
   constructor(private router: Router, private axios: AxiosService) {}
 
@@ -38,6 +40,17 @@ export class ChatsComponent implements OnInit {
       (response: AxiosResponse<ChatModel[]>) => {
         response.data.forEach((model) => {
           this.models.set(model.id, model);
+        });
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+
+    this.axios.request('GET', '/agents').then(
+      (response: AxiosResponse<Agent[]>) => {
+        response.data.forEach((agent) => {
+          this.agents.set(agent.id, agent);
         });
       },
       (error) => {

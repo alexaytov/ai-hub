@@ -48,7 +48,7 @@ import { Error } from '../models/error.model';
 export class CreateChatModelComponent implements OnInit {
   @ViewChild('typeSelector') typeSelector: ElementRef | undefined;
 
-  model: ChatModel = {};
+  model: ChatModel = { id: 0, name: '' };
   form: FormGroup;
   error: string | undefined;
   hideError = false;
@@ -74,7 +74,6 @@ export class CreateChatModelComponent implements OnInit {
   }
 
   onAddParameter() {
-    console.log(this.form);
     this.parametersFormArray.push(this.fb.group({ key: '', value: '' }));
   }
 
@@ -97,6 +96,7 @@ export class CreateChatModelComponent implements OnInit {
     const type = this.typeSelector?.nativeElement.value;
 
     const model: ChatModel = {
+      id: -1,
       name: this.form.value.name,
       description: this.form.value.description,
       type: type,

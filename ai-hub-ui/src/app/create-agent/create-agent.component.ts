@@ -108,7 +108,6 @@ export class CreateAgentComponent implements OnInit {
       systemMessageId: this.message.nativeElement.value,
       modelId: this.model.nativeElement.value,
     };
-    console.log(agent);
 
     this.axios
       .request('POST', '/agents', agent)

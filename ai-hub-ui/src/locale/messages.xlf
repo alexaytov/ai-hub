@@ -125,7 +125,11 @@
         <source>Chat</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/agents/agents.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/chat/chat.component.html</context>
+          <context context-type="linenumber">2,3</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6537626382528513237" datatype="html">
@@ -172,18 +176,43 @@
           <context context-type="linenumber">21,22</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="677638568866368552" datatype="html">
-        <source>AI Chat Model</source>
+      <trans-unit id="8941575280647936895" datatype="html">
+        <source>Model:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/chat/chat.component.html</context>
-          <context context-type="linenumber">2,3</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/create-agent/create-agent.component.html</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3098211361838510449" datatype="html">
+        <source>Agent:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/chat/chat.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7148619191729287767" datatype="html">
+        <source>Waiting response...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/chat/chat.component.html</context>
+          <context context-type="linenumber">21,22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1070556603859709137" datatype="html">
+        <source>Type your message...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/chat/chat.component.html</context>
+          <context context-type="linenumber">31,32</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6490688569532630280" datatype="html">
         <source>Send</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/chat/chat.component.html</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6181907632373133266" datatype="html">
@@ -265,13 +294,6 @@
           <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="8941575280647936895" datatype="html">
-        <source>Model:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/create-agent/create-agent.component.html</context>
-          <context context-type="linenumber">48</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="935187492052582731" datatype="html">
         <source>Submit</source>
         <context-group purpose="location">
@@ -280,7 +302,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/create-chat-model/create-chat-model.component.html</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">99</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/create-message/create-message.component.html</context>
@@ -327,14 +349,14 @@
         <source>API Key:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/create-chat-model/create-chat-model.component.html</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1921754862980587639" datatype="html">
         <source> API Key is required </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/create-chat-model/create-chat-model.component.html</context>
-          <context context-type="linenumber">59,60</context>
+          <context context-type="linenumber">60,61</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8120573889944352153" datatype="html">

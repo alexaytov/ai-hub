@@ -59,8 +59,7 @@ public class AgentServiceImpl implements AgentService {
             .filter(a -> a.getUser().getId().equals(user.getId()))
             .orElseThrow(() -> new HttpClientErrorException(BAD_REQUEST, "Invalid agent id"));
 
-        AgentDto dto = new AgentDto();
-        dto.setId(agent.getId());
+        AgentDto dto = mapper.map(agent, AgentDto.class);
         dto.setModelId(agent.getModel().getId());
         dto.setSystemMessageId(agent.getSystemMessage().getId());
         return dto;

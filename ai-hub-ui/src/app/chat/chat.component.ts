@@ -4,6 +4,7 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   ElementRef,
   OnInit,
+  SecurityContext,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,15 +21,24 @@ import '@ui5/webcomponents-compat/dist/TableCell.js';
 import '@ui5/webcomponents/dist/Card.js';
 import '@ui5/webcomponents/dist/CardHeader.js';
 import '@ui5/webcomponents/dist/Tag.js';
-import { MarkdownService } from 'ngx-markdown';
+import {
+  MarkdownModule,
+  MarkdownService,
+  SECURITY_CONTEXT,
+} from 'ngx-markdown';
+import { AxiosResponse } from 'axios';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MarkdownModule],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [
+    MarkdownService,
+    { provide: SECURITY_CONTEXT, useValue: SecurityContext.HTML },
+  ],
 })
 export class ChatComponent implements OnInit, AfterViewChecked {
   @ViewChild('input') input: ElementRef | undefined;
@@ -38,6 +48,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   modelName: string | undefined;
   agentName: string | undefined;
   chatId: number | null = null;
+  waitingResponse = false;
 
   constructor(
     private router: Router,
@@ -56,7 +67,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
 
       if (id) {
         this.axios.request('GET', `/chats/${id}`).then(
-          (response) => {
+          (response: AxiosResponse<ChatContent>) => {
             this.chat = response.data;
 
             if (this.chat?.modelId) {
@@ -71,10 +82,10 @@ export class ChatComponent implements OnInit, AfterViewChecked {
                   }
                 );
             }
-
             if (this.chat?.agentId) {
               this.axios.request('GET', `/agents/${this.chat.agentId}`).then(
                 (response) => {
+                  response;
                   this.agentName = response.data.name;
                 },
                 (error) => {
@@ -107,6 +118,8 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   }
 
   sendMessage() {
+    this.waitingResponse = true;
+
     const message = this.input?.nativeElement.value;
     this.chat?.messages.push({
       content: message,
@@ -126,18 +139,20 @@ export class ChatComponent implements OnInit, AfterViewChecked {
             content: response.data.content,
             type: 'assistant',
           });
+          this.waitingResponse = false;
         },
         (error) => {
           this.chat?.messages.push({
             content: error.message,
             type: 'assistant',
           });
+          this.waitingResponse = false;
         }
       );
   }
 
   onKeydown(event: KeyboardEvent) {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && !this.waitingResponse) {
       this.sendMessage();
     }
   }

@@ -61,7 +61,6 @@ export class LoginComponent implements OnInit {
         },
         (error: AxiosError<Error>) => {
           if (error.response) {
-            console.log(error.response.data);
             this.error = error.response.data.message;
             return;
           }

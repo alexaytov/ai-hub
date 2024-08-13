@@ -27,7 +27,7 @@
           {{ chat.modelId ? models.get(chat.modelId)?.name : "No Model" }}
         </ui5-table-cell>
         <ui5-table-cell>
-          {{ chat.agentId ? chat.agentId : "No Agent" }}
+          {{ chat.agentId ? agents.get(chat.agentId)?.name : "No Agent" }}
         </ui5-table-cell>
         <ui5-table-cell>
           <div class="action-container">

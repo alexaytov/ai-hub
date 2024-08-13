@@ -1,19 +1,24 @@
 <div class="chat-container">
   <h1 i18n>Chat</h1>
   <div class="chat-header">
-    <p *ngIf="modelName">Model: {{ modelName }}</p>
-    <p *ngIf="agentName">Agent: {{ agentName }}</p>
+    <p *ngIf="modelName"><span i18n>Model:</span> {{ modelName }}</p>
+    <p *ngIf="agentName"><span i18n>Agent:</span> {{ agentName }}</p>
   </div>
   <section #chatWindow id="chatWindow" class="chat-window">
     <ng-container *ngFor="let message of chat?.messages">
-      <div
+      <markdown
         class="message"
         [ngClass]="{
           'user-message': message.type.toLowerCase() === 'user',
           'ai-message': message.type.toLowerCase() === 'assistant'
         }"
+        >{{ message.content }}</markdown
       >
-        {{ message.content }}
+    </ng-container>
+    <ng-container *ngIf="waitingResponse">
+      <div class="spinner-container">
+        <div class="spinner"></div>
+        <div i18n>Waiting response...</div>
       </div>
     </ng-container>
   </section>
@@ -22,10 +27,15 @@
     <ui5-input
       #input
       id="chatInput"
+      i18n-placeholder
       placeholder="Type your message..."
       (keydown)="onKeydown($event)"
     ></ui5-input>
-    <ui5-button i18n design="Emphasized" (click)="sendMessage()"
+    <ui5-button
+      [disabled]="waitingResponse"
+      i18n
+      design="Emphasized"
+      (click)="sendMessage()"
       >Send</ui5-button
     >
   </div>
