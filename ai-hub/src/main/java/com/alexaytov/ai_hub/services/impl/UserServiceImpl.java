@@ -102,6 +102,16 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public void deleteUser() {
+        User user = getUser();
+        if (user.getId().equals(1L)) {
+            throw new HttpClientErrorException(BAD_REQUEST, "Cannot delete the admin user");
+        }
+
+        userRepository.deleteById(user.getId());
+    }
+
     private UserDto toUserDto(User user) {
         UserDto dto = new UserDto();
         dto.setId(user.getId());

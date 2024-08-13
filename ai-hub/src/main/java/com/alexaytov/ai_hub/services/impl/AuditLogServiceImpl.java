@@ -37,7 +37,7 @@ public class AuditLogServiceImpl implements AuditLogService {
     public void createUser(Long id) {
         AuditLogUserDto body = new AuditLogUserDto(id);
         try {
-            template.postForObject(endpoint, body, AuditLogDto.class);
+            template.postForObject(endpoint + "/users", body, AuditLogDto.class);
         } catch (RestClientException ex) {
             LOGGER.error("Error while creating user in audit log service", ex);
             throw new HttpClientErrorException(INTERNAL_SERVER_ERROR, "Error while creating user in audit log service");
@@ -45,8 +45,7 @@ public class AuditLogServiceImpl implements AuditLogService {
     }
 
     @Override
-    public void deleteUser() {
-        Long id = userService.getUser().getId();
+    public void deleteUser(Long id) {
         try {
             template.delete(format("%s/users/%d", endpoint, id));
         } catch (RestClientException ex) {

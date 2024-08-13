@@ -7,6 +7,7 @@ import com.alexaytov.ai_hub.model.dtos.CredentialsDto;
 import com.alexaytov.ai_hub.model.dtos.SignUpDto;
 import com.alexaytov.ai_hub.model.dtos.UpdateUserRequest;
 import com.alexaytov.ai_hub.model.dtos.UserDto;
+import com.alexaytov.ai_hub.model.entities.User;
 import com.alexaytov.ai_hub.model.enums.UserRole;
 import com.alexaytov.ai_hub.services.AuditLogService;
 import com.alexaytov.ai_hub.services.UserAuthenticationProvider;
@@ -74,6 +75,16 @@ class UsersControllerTest {
         verify(service).updateUser(request);
         verify(authProvider).createToken(user);
         assertEquals("token", actual.getToken());
+    }
+
+    @Test
+    void whenDeletingUser_thenUserIsDeleted() {
+        when(service.getUser()).thenReturn(new User(1L, "user", "password"));
+
+        classUnderTest.deleteUser();
+        verify(service).deleteUser();
+        verify(auditLog).deleteUser(1L);
+        verify(auditLog).postAuditLog("Deleting user with id " + service.getUser().getId());
     }
 
 }

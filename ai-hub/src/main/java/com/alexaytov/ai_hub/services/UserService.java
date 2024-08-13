@@ -16,4 +16,6 @@ public interface UserService {
     UserDto updateUser(UpdateUserRequest request);
 
     void save(User save);
+
+    void deleteUser();
 }

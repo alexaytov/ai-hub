@@ -7,7 +7,7 @@ import com.alexaytov.ai_hub.model.dtos.AuditLogDto;
 public interface AuditLogService {
     void createUser(Long id);
 
-    void deleteUser();
+    void deleteUser(Long id);
 
     void postAuditLog(String message);
 

@@ -121,4 +121,15 @@ class UserServiceImplTest {
         assertEquals("user", actual.getUsername());
     }
 
+    @Test
+    void givenAdminUser_whenDeletingUser_thenCorrectExceptionIsThrown() {
+        org.springframework.security.core.userdetails.User authUser = new org.springframework.security.core.userdetails.User("user", "password", true, true, true, true, Collections.emptyList());
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(authUser, "password");
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        when(userRepository.findByUsername("user")).thenReturn(Optional.of(new User(1L, "user", "password")));
+
+        assertThrows(HttpClientErrorException.class, () -> classUnderTest.deleteUser());
+    }
+
 }

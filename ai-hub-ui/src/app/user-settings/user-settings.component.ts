@@ -93,4 +93,16 @@ export class UserSettingsComponent implements OnInit {
   onHideSuccess() {
     this.success = undefined;
   }
+
+  onDeleteUser() {
+    this.axios.request('DELETE', '/user').then(
+      () => {
+        this.axios.setAuthToken(null);
+        this.router.navigate(['/login']);
+      },
+      (error) => {
+        this.error = error.message;
+      }
+    );
+  }
 }

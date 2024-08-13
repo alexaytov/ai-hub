@@ -47,7 +47,7 @@ class AuditLogServiceImplTest {
         user.setId(1L);
         when(userService.getUser()).thenReturn(user);
 
-        classUnderTest.deleteUser();
+        classUnderTest.deleteUser(1L);
 
         verify(template).delete(ENDPOINT + "/users/1");
     }
@@ -91,7 +91,7 @@ class AuditLogServiceImplTest {
 
     @Test
     void givenExceptionThrown_whenCreatingUser_thenCorrectExceptionIsThrown() {
-        when(template.postForObject(ENDPOINT, new AuditLogUserDto(1L), AuditLogDto.class))
+        when(template.postForObject(ENDPOINT + "/users", new AuditLogUserDto(1L), AuditLogDto.class))
             .thenThrow(new RestClientException("Error"));
 
         try {
@@ -110,7 +110,7 @@ class AuditLogServiceImplTest {
         doThrow(new RestClientException("Error")).when(template).delete(ENDPOINT + "/users/1");
 
         try {
-            classUnderTest.deleteUser();
+            classUnderTest.deleteUser(1L);
         } catch (Exception ex) {
             assertEquals("500 Error while deleting user in audit log service", ex.getMessage());
         }

@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +15,7 @@ import com.alexaytov.ai_hub.model.dtos.UpdateUserRequest;
 import com.alexaytov.ai_hub.model.dtos.CredentialsDto;
 import com.alexaytov.ai_hub.model.dtos.SignUpDto;
 import com.alexaytov.ai_hub.model.dtos.UserDto;
+import com.alexaytov.ai_hub.model.entities.User;
 import com.alexaytov.ai_hub.model.enums.UserRole;
 import com.alexaytov.ai_hub.services.AuditLogService;
 import com.alexaytov.ai_hub.services.UserAuthenticationProvider;
@@ -55,6 +58,15 @@ public class UsersController {
         createdUser.setRoles(List.of(UserRole.USER));
         createdUser.setToken(userAuthenticationProvider.createToken(createdUser));
         return ResponseEntity.created(URI.create("/users/" + createdUser.getId())).body(createdUser);
+    }
+
+    @DeleteMapping("/user")
+    public ResponseEntity<Void> deleteUser() {
+        User user = userService.getUser();
+        auditLog.postAuditLog("Deleting user with id " + user.getId());
+        userService.deleteUser();
+        auditLog.deleteUser(user.getId());
+        return ResponseEntity.noContent().build();
     }
 
 }
