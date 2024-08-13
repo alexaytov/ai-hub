@@ -15,11 +15,11 @@
     <ui5-message-strip
       #error
       (close)="onHideError()"
-      *ngIf="error"
+      *ngIf="errorMessage"
       design="Negative"
       i18n
     >
-      An error occurred: {{ error }}
+      An error occurred: {{ errorMessage }}
     </ui5-message-strip>
 
     <ui5-label i18n for="username-input">Username: </ui5-label>
@@ -49,13 +49,18 @@
 
     <div class="button-container">
       <ui5-button i18n (click)="onEdit()">Edit</ui5-button>
-      <ui5-button i18n (click)="onDeleteUser()">Delete User</ui5-button>
       <ui5-button
         i18n
         (click)="onChangeUsername()"
         design="Emphasized"
         id="save-button"
         >Save</ui5-button
+      >
+    </div>
+    <br />
+    <div class="button-container">
+      <ui5-button design="Negative" i18n (click)="onDeleteUser()"
+        >Delete User</ui5-button
       >
     </div>
   </form>

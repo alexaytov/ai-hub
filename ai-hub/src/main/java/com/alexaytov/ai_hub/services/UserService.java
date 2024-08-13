@@ -18,4 +18,6 @@ public interface UserService {
     void save(User save);
 
     void deleteUser();
+
+    void deleteUser(Long id);
 }

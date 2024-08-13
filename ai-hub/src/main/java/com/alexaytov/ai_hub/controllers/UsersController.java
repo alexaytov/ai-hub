@@ -5,15 +5,14 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alexaytov.ai_hub.model.dtos.UpdateUserRequest;
 import com.alexaytov.ai_hub.model.dtos.CredentialsDto;
 import com.alexaytov.ai_hub.model.dtos.SignUpDto;
+import com.alexaytov.ai_hub.model.dtos.UpdateUserRequest;
 import com.alexaytov.ai_hub.model.dtos.UserDto;
 import com.alexaytov.ai_hub.model.entities.User;
 import com.alexaytov.ai_hub.model.enums.UserRole;
@@ -53,7 +52,12 @@ public class UsersController {
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(@RequestBody @Valid SignUpDto user) {
         UserDto createdUser = userService.register(user);
-        auditLog.createUser(createdUser.getId());
+        try {
+            auditLog.createUser(createdUser.getId());
+        } catch (Exception ex) {
+            userService.deleteUser(createdUser.getId());
+            throw ex;
+        }
 
         createdUser.setRoles(List.of(UserRole.USER));
         createdUser.setToken(userAuthenticationProvider.createToken(createdUser));

@@ -645,11 +645,18 @@
           <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="4839682406703705780" datatype="html">
+        <source>Delete User</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/user-settings/user-settings.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="3768927257183755959" datatype="html">
         <source>Save</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user-settings/user-settings.component.html</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">58</context>
         </context-group>
       </trans-unit>
     </body>

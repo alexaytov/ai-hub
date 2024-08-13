@@ -15,6 +15,8 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Ui5InputValueAccessorDirective } from '../ui5-input-value-accessor.directive';
+import { AxiosError } from 'axios';
+import { Error } from '../models/error.model';
 
 @Component({
   selector: 'app-user-settings',
@@ -34,7 +36,7 @@ export class UserSettingsComponent implements OnInit {
   edit: boolean = false;
   originalUsername: string = '';
 
-  error: string | undefined;
+  errorMessage: string | undefined;
   success: boolean | undefined;
 
   constructor(private router: Router, private axios: AxiosService) {
@@ -81,14 +83,18 @@ export class UserSettingsComponent implements OnInit {
         this.edit = false;
         this.success = true;
       },
-      (error) => {
-        this.error = error.message;
+      (error: AxiosError<Error>) => {
+        if (error.response) {
+          this.errorMessage = error.response.data.message;
+          return;
+        }
+        this.errorMessage = error.message;
       }
     );
   }
 
   onHideError() {
-    this.error = undefined;
+    this.errorMessage = undefined;
   }
   onHideSuccess() {
     this.success = undefined;
@@ -100,8 +106,12 @@ export class UserSettingsComponent implements OnInit {
         this.axios.setAuthToken(null);
         this.router.navigate(['/login']);
       },
-      (error) => {
-        this.error = error.message;
+      (error: AxiosError<Error>) => {
+        if (error.response) {
+          this.errorMessage = error.response.data.message;
+          return;
+        }
+        this.errorMessage = error.message;
       }
     );
   }
