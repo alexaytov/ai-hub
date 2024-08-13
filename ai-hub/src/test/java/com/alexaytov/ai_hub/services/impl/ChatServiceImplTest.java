@@ -109,7 +109,11 @@ class ChatServiceImplTest {
         user.setId(1L);
         when(userService.getUser()).thenReturn(user);
 
+        AIModel model = new AIModel();
+        model.setId(1L);
+
         Chat chat = new Chat();
+        chat.setModel(model);
         user.setChats(List.of(chat));
 
         chat.setId(1L);
