@@ -3,7 +3,7 @@
   grid-template-columns: 1fr;
   grid-gap: 10px;
   align-items: center;
-  max-width: 400px;
+  max-width: 700px;
   margin: 0 auto; /* Center the form horizontally */
   padding: 20px;
   border: 1px solid #ccc;
@@ -24,7 +24,6 @@
 .error-message {
   color: red;
   font-size: 0.9em;
-  margin-top: -10px; /* Adjust position closer to input if needed */
 }
 
 /* Centering the form within the viewport */
@@ -32,12 +31,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Full viewport height */
+  margin-top: 1rem;
 }
 
 ui5-card {
   width: 100%;
-  max-width: 500px; /* Limit the maximum width of the card */
+  max-width: 800px; /* Limit the maximum width of the card */
   border-radius: 8px;
 }
 

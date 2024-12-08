@@ -14,10 +14,12 @@ import '@ui5/webcomponents/dist/Card.js';
 import '@ui5/webcomponents/dist/CardHeader.js';
 import '@ui5/webcomponents/dist/Label.js';
 import '@ui5/webcomponents/dist/Input.js';
+import '@ui5/webcomponents/dist/TextArea.js';
 import '@ui5/webcomponents/dist/MessageStrip.js';
 import '@ui5/webcomponents/dist/Button.js';
 import '@ui5/webcomponents-icons/dist/letter.js';
 import { Ui5InputValueAccessorDirective } from '../ui5-input-value-accessor.directive';
+import { UI5TextAreaValueAccessorDirective } from '../ui5-text-area-value-accessor.directive';
 
 @Component({
   selector: 'app-create-message',
@@ -27,6 +29,7 @@ import { Ui5InputValueAccessorDirective } from '../ui5-input-value-accessor.dire
     FormsModule,
     ReactiveFormsModule,
     Ui5InputValueAccessorDirective,
+    UI5TextAreaValueAccessorDirective,
     RouterModule,
   ],
   templateUrl: './create-message.component.html',

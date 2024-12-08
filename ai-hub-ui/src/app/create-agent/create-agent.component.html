@@ -5,59 +5,112 @@
   <div *ngIf="error">
     <ui5-message-strip design="Negative" hide-close-button>{{
       error
-    }}</ui5-message-strip>
+      }}</ui5-message-strip>
   </div>
   <div *ngIf="success">
     <ui5-message-strip i18n design="Positive" hide-close-button>
       Agent Successfully Created
     </ui5-message-strip>
     <div class="view-models-container">
-      <ui5-button i18n routerLink="/agents" design="Positive"
-        >View Agents</ui5-button
-      >
+      <ui5-button i18n routerLink="/agents" design="Positive">View Agents</ui5-button>
     </div>
   </div>
   <form [formGroup]="form" class="form-container">
-    <ui5-label i18n required for="name">Name:</ui5-label>
-    <ui5-input id="name" formControlName="name"></ui5-input>
-    <div
-      *ngIf="form.get('name')?.invalid && form.get('name')?.touched"
-      class="error-message"
-    >
-      {{ form.get('name')?.errors?.['required'] ? 'Name is required' : 'Name is too long' }}
+    <div style="display: flex; gap: 1rem">
+      <div>
+        <ui5-label i18n required for="name">Name:</ui5-label>
+        <ui5-input id="name" formControlName="name"></ui5-input>
+        <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="error-message">
+          {{ form.get('name')?.errors?.['required'] ? 'Name is required' : 'Name is too long' }}
+        </div>
+
+        <ui5-label i18n required for="description">Description:</ui5-label>
+        <ui5-input id="description" formControlName="description"></ui5-input>
+        <div *ngIf="
+            form.get('description')?.invalid && form.get('description')?.touched
+          " class="error-message">
+          {{ form.get('description')?.errors?.['required'] ? 'Description is required' : 'Description is too long' }}
+        </div>
+
+        <ui5-label i18n for="message">Predefined Instruction Message:</ui5-label>
+        <ui5-select [disabled]="usingCustomMessage" style="width: 100%;" #message id="message">
+          <ui5-option value="-1">No Message</ui5-option>
+          <ui5-option *ngFor="let msg of systemMessage" [value]="msg.id">{{
+            msg.message
+            }}</ui5-option>
+        </ui5-select>
+        <ui5-label i18n for="message">Custom Instructional Message:</ui5-label>
+        <ui5-textarea (input)="onCustomMessage()" #customInstructionalMessage growing growing-max-rows="10"
+          style="width: 100%;"></ui5-textarea>
+
+        <ui5-label i18n required for="model">Model:</ui5-label>
+        <br>
+        <ui5-select #model id="model">
+          <ui5-option *ngFor="let model of models" [value]="model.id">{{
+            model.name
+            }}</ui5-option>
+        </ui5-select>
+      </div>
+      <div *ngIf="presencePenalty || frequencyPenalty || temperature || maxTokens" style="width: 50%;">
+        <ui5-label>Parameters:</ui5-label>
+        <div style="display: flex; flex-direction: column; gap: 1rem">
+          <div *ngIf="presencePenalty">
+            <ui5-label>Presence Penalty</ui5-label>
+            <ui5-slider #presenceSlider [value]="presencePenalty" show-tickmarks show-tooltip label-interval="10"
+              min="-2" max="2" step="0.1"></ui5-slider>
+          </div>
+
+          <div *ngIf="frequencyPenalty">
+            <ui5-label>Frequency Penalty</ui5-label>
+            <ui5-slider #frequencySlider value="0" show-tickmarks show-tooltip label-interval="10" min="-2" max="2"
+              step="0.1"></ui5-slider>
+          </div>
+
+          <div *ngIf="temperature">
+            <ui5-label>Temperature</ui5-label>
+            <ui5-slider #temperatureSlider value="1" show-tickmarks show-tooltip label-interval="10" min="0" max="2"
+              step="0.1"></ui5-slider>
+          </div>
+
+          <div *ngIf="maxTokens">
+            <ui5-label>Max Tokens</ui5-label>
+            <ui5-input #maxTokensInput></ui5-input>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <ui5-label i18n required for="description">Description:</ui5-label>
-    <ui5-input id="description" formControlName="description"></ui5-input>
-    <div
-      *ngIf="
-        form.get('description')?.invalid && form.get('description')?.touched
-      "
-      class="error-message"
-    >
-      {{ form.get('description')?.errors?.['required'] ? 'Description is required' : 'Description is too long' }}
-    </div>
-
-    <ui5-label i18n required for="message">System Message:</ui5-label>
-    <ui5-select #message id="message">
-      <ui5-option *ngFor="let msg of systemMessage" [value]="msg.id">{{
-        msg.message
-      }}</ui5-option>
-    </ui5-select>
-
-    <ui5-label i18n required for="model">Model:</ui5-label>
-    <ui5-select #model id="model">
-      <ui5-option *ngFor="let model of models" [value]="model.id">{{
-        model.name
-      }}</ui5-option>
-    </ui5-select>
-
-    <ui5-button
-      i18n
-      [disabled]="success"
-      design="Emphasized"
-      (click)="onSubmit()"
-      >Submit</ui5-button
-    >
+    <ui5-button i18n [disabled]="success" (click)="onTestConfiguration()">Test Configuration</ui5-button>
+    <ui5-button i18n [disabled]="success" design="Emphasized" (click)="onSubmit()">Submit</ui5-button>
   </form>
+</ui5-card>
+<ui5-card *ngIf="messages !== undefined">
+  <ui5-card-header slot="header" title-text="Test Configuration Chat">
+    <ui5-icon name="message" slot="avatar"></ui5-icon>
+  </ui5-card-header>
+
+  <div class="chat-container">
+    <h1 i18n>Chat</h1>
+    <section #chatWindow id="chatWindow" class="chat-window">
+      <ng-container *ngFor="let message of messages">
+        <markdown class="message" [ngClass]="{
+            'user-message': message.type.toLowerCase() === 'user',
+            'ai-message': message.type.toLowerCase() === 'assistant'
+          }">{{ message.content }}</markdown>
+      </ng-container>
+      <ng-container *ngIf="waitingResponse">
+        <div class="spinner-container">
+          <div class="spinner"></div>
+          <div i18n>Waiting response...</div>
+        </div>
+      </ng-container>
+    </section>
+
+    <div class="input-container">
+      <ui5-textarea #input id="chatInput" i18n-placeholder placeholder="Type your message..."
+        (keydown)="onKeydown($event)"></ui5-textarea>
+      <ui5-button [disabled]="waitingResponse" i18n design="Emphasized" (click)="onSendMessageClick()">Send</ui5-button>
+    </div>
+  </div>
+
 </ui5-card>

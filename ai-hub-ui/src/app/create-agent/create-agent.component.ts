@@ -19,10 +19,12 @@ import '@ui5/webcomponents/dist/Card.js';
 import '@ui5/webcomponents/dist/CardHeader.js';
 import '@ui5/webcomponents/dist/Label.js';
 import '@ui5/webcomponents/dist/Input.js';
+import '@ui5/webcomponents/dist/TextArea.js';
 import '@ui5/webcomponents/dist/MessageStrip.js';
 import '@ui5/webcomponents/dist/Button.js';
 import '@ui5/webcomponents/dist/Option.js';
 import '@ui5/webcomponents/dist/Select.js';
+import "@ui5/webcomponents/dist/Switch";
 
 import { Router, RouterModule } from '@angular/router';
 import { AxiosService } from '../services/axios/axios.service';
@@ -30,6 +32,8 @@ import { SystemMessage } from '../models/system-message.model';
 import { ChatModel } from '../models/chat-model.model';
 import { AxiosError } from 'axios';
 import { Error } from '../models/error.model';
+import { ChatMessage } from '../models/chat-message.model';
+import { QueryRequest } from '../models/query-request.model';
 
 @Component({
   selector: 'app-create-agent',
@@ -47,7 +51,9 @@ import { Error } from '../models/error.model';
 })
 export class CreateAgentComponent implements OnInit {
   @ViewChild('model') model: any;
+  @ViewChild('input') input: any;
   @ViewChild('message') message: any;
+  @ViewChild('customInstructionalMessage') customInstructionalMessage: any;
 
   form: FormGroup;
   error: string | undefined;
@@ -56,6 +62,17 @@ export class CreateAgentComponent implements OnInit {
 
   systemMessage: SystemMessage[] = [];
   models: ChatModel[] = [];
+
+  usingCustomMessage = false;
+  presencePenalty: number | undefined;
+  frequencyPenalty: number | undefined;
+  temperature: number | undefined;
+  maxTokens: number | undefined;
+
+  // Test Configuration
+  messages: ChatMessage[] | undefined;
+  waitingResponse: any;
+  currentMessage: string | undefined;
 
   constructor(
     private router: Router,
@@ -88,10 +105,50 @@ export class CreateAgentComponent implements OnInit {
       .request('GET', '/chat-models')
       .then((response) => {
         this.models = response.data;
+        this.onUpdateParameters();
       })
       .catch((error) => {
         this.error = error.message;
       });
+  }
+
+  onUpdateParameters() {
+    let parameters: { [key: string]: string } | undefined;
+    if (this.model.nativeElement.value) {
+      parameters = this.models.find(m => m.id === this.model.nativeElement.value)?.parameters;
+    } else {
+      parameters = this.models[0].parameters;
+    }
+
+    if (!parameters) {
+      return;
+    }
+
+    if (parameters['presencePenalty']) {
+      this.presencePenalty = parseFloat(parameters['presencePenalty']);
+    }
+
+    if (parameters['frequencyPenalty']) {
+      this.frequencyPenalty = parseFloat(parameters['frequencyPenalty']);
+    }
+
+    if (parameters['temperature']) {
+      this.frequencyPenalty = parseFloat(parameters['temperature']);
+    }
+
+    if (parameters['maxTokens']) {
+      this.frequencyPenalty = parseFloat(parameters['maxTokens']);
+    }
+  }
+
+  onCustomMessage() {
+    const value = this.customInstructionalMessage.nativeElement.value;
+    if (value === null || value === '') {
+      this.usingCustomMessage = false;
+      return;
+    }
+
+    this.usingCustomMessage = true;
   }
 
   onSubmit() {
@@ -122,6 +179,89 @@ export class CreateAgentComponent implements OnInit {
 
         this.error = error.message;
       });
+  }
+
+  onTestConfiguration() {
+    if (this.messages === undefined) {
+      this.messages = [];
+    }
+  }
+
+  onKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter' && event.metaKey && !this.waitingResponse) {
+      const message = this.input.nativeElement.value;
+      this.input.nativeElement.value = '';
+      this.sendMessage(message);
+    }
+  }
+
+  private getSystemMessage(): string {
+    if (this.customInstructionalMessage.nativeElement.value) {
+      return this.customInstructionalMessage.nativeElement.value;
+    }
+
+    if (this.message.nativeElement.value === -1) {
+      return '';
+    }
+
+    const message = this.systemMessage.find((m) => m.id == this.message.nativeElement.value);
+    return message?.message || '';
+  }
+
+  onSendMessageClick() {
+    this.sendMessage(this.input.nativeElement.value);
+    this.input.nativeElement.value = '';
+  }
+
+  sendMessage(message: string) {
+    this.waitingResponse = true;
+
+    this.messages?.push({
+      content: message|| '',
+      type: 'USER',
+    });
+
+    const lastMessages = this.messages?.slice(-4);
+
+    const parameters: { [key: string]: string } = {};
+    if (this.presencePenalty) {
+      parameters['presencePenalty'] = this.presencePenalty.toString();
+    }
+    if (this.frequencyPenalty) {
+      parameters['frequencyPenalty'] = this.frequencyPenalty.toString();
+    }
+    if (this.temperature) {
+      parameters['temperature'] = this.temperature.toString();
+    }
+    if (this.maxTokens) {
+      parameters['maxTokens'] = this.maxTokens.toString();
+    }
+
+    const queryRequest: QueryRequest = {
+      modelId: this.model.nativeElement.value,
+      systemMessage: this.getSystemMessage(),
+      messages: lastMessages || [],
+      customParameters: parameters,
+    }
+
+    this.axios
+      .request('POST', `/query`, queryRequest)
+      .then(
+        (response) => {
+          this.messages?.push({
+            content: response.data.content,
+            type: 'ASSISTANT',
+          });
+          this.waitingResponse = false;
+        },
+        (error) => {
+          this.messages?.push({
+            content: error.message,
+            type: 'ASSISTANT',
+          });
+          this.waitingResponse = false;
+        }
+      );
   }
 
   onHideError() {

@@ -22,11 +22,11 @@ import '@ui5/webcomponents/dist/Label.js';
 import '@ui5/webcomponents/dist/Input.js';
 import '@ui5/webcomponents/dist/MessageStrip.js';
 import '@ui5/webcomponents/dist/Button.js';
+import "@ui5/webcomponents/dist/Slider.js";
 
 import { Ui5InputValueAccessorDirective } from '../ui5-input-value-accessor.directive';
 import { AxiosError } from 'axios';
 import { AxiosService } from '../services/axios/axios.service';
-import { ChatModelType } from '../models/chat-model-type.mode';
 import { Router, RouterModule } from '@angular/router';
 import { Error } from '../models/error.model';
 
@@ -46,7 +46,14 @@ import { Error } from '../models/error.model';
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CreateChatModelComponent implements OnInit {
+
   @ViewChild('typeSelector') typeSelector: ElementRef | undefined;
+  @ViewChild('maxTokensInput') maxTokensInput: ElementRef | undefined;
+  @ViewChild('temperatureSlider') temperatureInput: ElementRef | undefined;
+  @ViewChild('presenceSlider') presencePenaltyInput: ElementRef | undefined;
+  @ViewChild('frequencySlider') frequencySlider: ElementRef | undefined;
+
+  type = 'AI_CORE';
 
   model: ChatModel = { id: 0, name: '' };
   form: FormGroup;
@@ -66,11 +73,16 @@ export class CreateChatModelComponent implements OnInit {
       parameters: fb.array([]),
     });
   }
+
   ngOnInit(): void {
     if (!this.axios.getAuthToken()) {
       // Redirect to the login page if the user is not logged in
       this.router.navigate(['/login']);
     }
+  }
+
+  onTypeChange($event: Event) {
+    this.type = ($event.target as HTMLSelectElement).value;
   }
 
   onAddParameter() {
@@ -95,22 +107,29 @@ export class CreateChatModelComponent implements OnInit {
 
     const type = this.typeSelector?.nativeElement.value;
 
+    const parameters = this.form.value.parameters.reduce(
+      (
+        acc: { [x: string]: any },
+        curr: { key: string | number; value: any }
+      ) => {
+        acc[curr.key] = curr.value;
+        return acc;
+      },
+      {});
+    if (this.maxTokensInput?.nativeElement.value && this.maxTokensInput?.nativeElement.value !== '') {
+      parameters['maxTokens'] = this.maxTokensInput?.nativeElement.value;
+    }
+
+    parameters['temperature'] = this.temperatureInput?.nativeElement.value;
+    parameters['presencePenalty'] = this.presencePenaltyInput?.nativeElement.value;
+
     const model: ChatModel = {
       id: -1,
       name: this.form.value.name,
       description: this.form.value.description,
       type: type,
       apiKey: this.form.value.apiKey,
-      parameters: this.form.value.parameters.reduce(
-        (
-          acc: { [x: string]: any },
-          curr: { key: string | number; value: any }
-        ) => {
-          acc[curr.key] = curr.value;
-          return acc;
-        },
-        {}
-      ),
+      parameters: parameters,
     };
 
     this.axios
