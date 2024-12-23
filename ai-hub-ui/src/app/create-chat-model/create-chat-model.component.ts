@@ -122,6 +122,7 @@ export class CreateChatModelComponent implements OnInit {
 
     parameters['temperature'] = this.temperatureInput?.nativeElement.value;
     parameters['presencePenalty'] = this.presencePenaltyInput?.nativeElement.value;
+    parameters['frequencyPenalty'] = this.frequencySlider?.nativeElement.value;
 
     const model: ChatModel = {
       id: -1,

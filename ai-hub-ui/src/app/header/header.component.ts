@@ -5,6 +5,7 @@ import '@ui5/webcomponents/dist/List.js';
 import '@ui5/webcomponents/dist/ListItemStandard.js';
 
 import '@ui5/webcomponents-icons/dist/person-placeholder.js';
+import '@ui5/webcomponents-icons/dist/database.js';
 import '@ui5/webcomponents/dist/Popover.js';
 
 import '@ui5/webcomponents-icons/dist/log.js';
@@ -75,6 +76,11 @@ export class HeaderComponent {
 
     if (path === 'chats') {
       this.router.navigate(['/chats']);
+      return;
+    }
+
+    if (path === 'data-sources') {
+      this.router.navigate(['/data-sources']);
       return;
     }
   }

@@ -8,10 +8,19 @@ public class QueryRequestDto {
   private Long modelId;
   private String systemMessage;
   private List<ChatMessageDto> messages;
+  private List<Long> dataSources;
   private Map<String, String> customParameters;
 
   public void setCustomParameters(Map<String, String> customParameters) {
     this.customParameters = customParameters;
+  }
+
+  public List<Long> getDataSources() {
+    return dataSources;
+  }
+
+  public void setDataSources(List<Long> dataSources) {
+    this.dataSources = dataSources;
   }
 
   public Map<String, String> getCustomParameters() {

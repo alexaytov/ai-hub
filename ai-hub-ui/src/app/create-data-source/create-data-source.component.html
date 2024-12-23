@@ -1,0 +1,13 @@
+
+<div class="centered-container">
+    <div class="container">
+        <ui5-label>Data Source:</ui5-label>
+        <ui5-file-uploader (change)="onFileChange($event)" accept="application/pdf, text/markdown">
+            <ui5-button accessible-name-ref="upload-single-file-label">Select File</ui5-button>
+        </ui5-file-uploader>
+    
+        <div class="button-container">
+            <ui5-button (click)="onUpload()" icon="upload" design="Positive">Upload</ui5-button>
+        </div>
+    </div>
+</div>

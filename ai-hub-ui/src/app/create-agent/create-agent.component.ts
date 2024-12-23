@@ -115,29 +115,40 @@ export class CreateAgentComponent implements OnInit {
   onUpdateParameters() {
     let parameters: { [key: string]: string } | undefined;
     if (this.model.nativeElement.value) {
-      parameters = this.models.find(m => m.id === this.model.nativeElement.value)?.parameters;
+      parameters = this.models.find(m => m.id == this.model.nativeElement.value)?.parameters;
     } else {
       parameters = this.models[0].parameters;
     }
 
     if (!parameters) {
+      this.presencePenalty = undefined;
+      this.frequencyPenalty = undefined;
+      this.maxTokens = undefined;
       return;
     }
 
-    if (parameters['presencePenalty']) {
+    if (parameters['presencePenalty'] != null) {
       this.presencePenalty = parseFloat(parameters['presencePenalty']);
+    } else {
+      this.presencePenalty = undefined;
     }
 
-    if (parameters['frequencyPenalty']) {
+    if (parameters['frequencyPenalty'] != null) {
       this.frequencyPenalty = parseFloat(parameters['frequencyPenalty']);
+    } else {
+      this.frequencyPenalty = undefined
     }
 
-    if (parameters['temperature']) {
-      this.frequencyPenalty = parseFloat(parameters['temperature']);
+    if (parameters['temperature'] != null) {
+      this.temperature = parseFloat(parameters['temperature']);
+    } else {
+      this.temperature = undefined;
     }
 
-    if (parameters['maxTokens']) {
-      this.frequencyPenalty = parseFloat(parameters['maxTokens']);
+    if (parameters['maxTokens'] != null) {
+      this.maxTokens = parseFloat(parameters['maxTokens']);
+    } else {
+      this.maxTokens = undefined;
     }
   }
 

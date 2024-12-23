@@ -1,0 +1,46 @@
+<ui5-card>
+    <ui5-card-header
+      slot="header"
+      title-text="Data Sources"
+      i18n-title-text
+      [additionalText]="dataSources?.length"
+    >
+      <ui5-icon name="database" slot="avatar"></ui5-icon>
+      <ui5-button
+        i18n
+        (click)="onNavigateToCreate()"
+        design="Positive"
+        slot="action"
+        >Create</ui5-button
+      >
+    </ui5-card-header>
+  
+    <div>
+      <ui5-table slot="content" i18n-no-data-text no-data-text="No Data">
+        <ui5-table-column slot="columns">
+          <span i18n>Name</span>
+        </ui5-table-column>
+        <ui5-table-column slot="columns">
+          <span i18n>Type</span>
+        </ui5-table-column>
+        <ui5-table-column slot="columns">
+          <span i18n>Action</span>
+        </ui5-table-column>
+  
+        <!-- Iterate over the messages array -->
+        <ui5-table-row *ngFor="let sources of dataSources">
+          <ui5-table-cell>
+            {{ sources.fileName}}
+          </ui5-table-cell>
+          <ui5-table-cell>
+            {{ sources.fileType}}
+          </ui5-table-cell>
+          <ui5-table-cell>
+            <ui5-button i18n design="Negative" (click)="deleteDataSource(sources.id)"
+              >Delete</ui5-button>
+          </ui5-table-cell>
+        </ui5-table-row>
+      </ui5-table>
+    </div>
+  </ui5-card>
+  

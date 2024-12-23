@@ -45,7 +45,7 @@
 
         <ui5-label i18n required for="model">Model:</ui5-label>
         <br>
-        <ui5-select #model id="model">
+        <ui5-select (change)="onUpdateParameters()" #model id="model">
           <ui5-option *ngFor="let model of models" [value]="model.id">{{
             model.name
             }}</ui5-option>
@@ -54,25 +54,25 @@
       <div *ngIf="presencePenalty || frequencyPenalty || temperature || maxTokens" style="width: 50%;">
         <ui5-label>Parameters:</ui5-label>
         <div style="display: flex; flex-direction: column; gap: 1rem">
-          <div *ngIf="presencePenalty">
+          <div *ngIf="presencePenalty != undefined">
             <ui5-label>Presence Penalty</ui5-label>
             <ui5-slider #presenceSlider [value]="presencePenalty" show-tickmarks show-tooltip label-interval="10"
               min="-2" max="2" step="0.1"></ui5-slider>
           </div>
 
-          <div *ngIf="frequencyPenalty">
+          <div *ngIf="frequencyPenalty != undefined">
             <ui5-label>Frequency Penalty</ui5-label>
             <ui5-slider #frequencySlider value="0" show-tickmarks show-tooltip label-interval="10" min="-2" max="2"
               step="0.1"></ui5-slider>
           </div>
 
-          <div *ngIf="temperature">
+          <div *ngIf="temperature != undefined">
             <ui5-label>Temperature</ui5-label>
             <ui5-slider #temperatureSlider value="1" show-tickmarks show-tooltip label-interval="10" min="0" max="2"
               step="0.1"></ui5-slider>
           </div>
 
-          <div *ngIf="maxTokens">
+          <div *ngIf="maxTokens != undefined">
             <ui5-label>Max Tokens</ui5-label>
             <ui5-input #maxTokensInput></ui5-input>
           </div>
