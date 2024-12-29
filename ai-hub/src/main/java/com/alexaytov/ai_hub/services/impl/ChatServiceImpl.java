@@ -6,6 +6,13 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import com.alexaytov.ai_hub.config.ChromaDB;
+import com.alexaytov.ai_hub.model.entities.DataSource;
+import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
+import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
+import dev.langchain4j.service.AiServices;
+import dev.langchain4j.service.Result;
+import dev.langchain4j.store.embedding.chroma.ChromaEmbeddingStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +45,8 @@ import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import jakarta.transaction.Transactional;
+
+import static dev.langchain4j.store.embedding.filter.MetadataFilterBuilder.metadataKey;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Service
@@ -55,9 +64,10 @@ public class ChatServiceImpl implements ChatService {
     private final Supplier<Long> timeSupplier;
     private final ChatMessageRepository chatMessageRepository;
     private final AIService aiService;
+    private final ChromaDB chromaDB;
 
     @Autowired
-    public ChatServiceImpl(UserService userService, ChatRepository repository, AgentRepository agentRepository, ModelRepository modelRepository, ChatRepository chatRepository, Encryption encryption, MessageTypeRepository typeRepository, ChatMessageRepository chatMessageRepository, AIService aiService) {
+    public ChatServiceImpl(UserService userService, ChatRepository repository, AgentRepository agentRepository, ModelRepository modelRepository, ChatRepository chatRepository, Encryption encryption, MessageTypeRepository typeRepository, ChatMessageRepository chatMessageRepository, AIService aiService, ChromaDB chromaDB) {
         this.userService = userService;
         this.repository = repository;
         this.agentRepository = agentRepository;
@@ -67,6 +77,7 @@ public class ChatServiceImpl implements ChatService {
         this.typeRepository = typeRepository;
         this.chatMessageRepository = chatMessageRepository;
         this.aiService = aiService;
+        this.chromaDB = chromaDB;
         timeSupplier = System::currentTimeMillis;
     }
 
@@ -78,7 +89,7 @@ public class ChatServiceImpl implements ChatService {
                     Encryption encryption,
                     MessageTypeRepository typeRepository,
                     ChatMessageRepository chatMessageRepository,
-                    Supplier<Long> timeSupplier, AIService aiService) {
+                    Supplier<Long> timeSupplier, AIService aiService, ChromaDB chromaDB) {
         this.userService = userService;
         this.repository = repository;
         this.agentRepository = agentRepository;
@@ -89,6 +100,7 @@ public class ChatServiceImpl implements ChatService {
         this.chatMessageRepository = chatMessageRepository;
         this.timeSupplier = timeSupplier;
         this.aiService = aiService;
+        this.chromaDB = chromaDB;
     }
 
 
@@ -103,7 +115,13 @@ public class ChatServiceImpl implements ChatService {
         ChatLanguageModel model = aiService.getModel(chat.getModel().getType().getType(), apiKey, chat.getModel().getParameters());
         List<ChatMessage> messages = buildMessages(query, chat);
 
-        String response = generateResponse(model, messages);
+        String response;
+        if (chat.getAgent() != null && !chat.getAgent().getDataSources().isEmpty()) {
+            response = generateResponse(model, messages, chat.getAgent().getDataSources());
+        } else {
+            response = generateResponse(model, messages);
+        }
+
         saveChatMessage(query.getContent(), response, chat);
 
         QueryResponseDto responseDto = new QueryResponseDto();
@@ -143,7 +161,38 @@ public class ChatServiceImpl implements ChatService {
         return messages;
     }
 
-    private static String generateResponse(ChatLanguageModel model, List<ChatMessage> messages) {
+    private String generateResponse(ChatLanguageModel model, List<ChatMessage> messages, List<DataSource> dataSources) {
+        try {
+            ChromaEmbeddingStore store =
+                    ChromaEmbeddingStore.builder()
+                            .collectionName("user_" + userService.getUser().getId())
+                            .baseUrl(chromaDB.getHost())
+                            .build();
+            EmbeddingStoreContentRetriever retriever =
+                    EmbeddingStoreContentRetriever.builder()
+                            .embeddingModel(new AllMiniLmL6V2EmbeddingModel())
+                            .embeddingStore(store)
+                            .maxResults(3)
+                            .minScore(0.75)
+                            .filter(
+                                    metadataKey("name")
+                                            .isIn(dataSources.stream().map(DataSource::getFileName).toList()))
+                            .build();
+
+            Assistant assistant = AiServices.builder(Assistant.class)
+                    .chatLanguageModel(model )
+                    .contentRetriever(retriever)
+                    .build();
+
+            Result<String> chat = assistant.chat(messages.get(messages.size() - 1).text());
+            return chat.content();
+        } catch (Exception ex) {
+            LOGGER.error("Error while generating response", ex);
+            return "An error occurred while processing the request. Please try again later.";
+        }
+    }
+
+    private String generateResponse(ChatLanguageModel model, List<ChatMessage> messages) {
         try {
             return model.generate(messages).content().text();
         } catch (Exception ex) {

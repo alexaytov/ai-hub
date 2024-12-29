@@ -1,7 +1,7 @@
 export interface Agent {
-  id: number;
+  id: number | undefined;
   name: string;
   description: string;
   modelId: number;
-  systemMessageId: number;
+  systemMessageId: number | undefined;
 }

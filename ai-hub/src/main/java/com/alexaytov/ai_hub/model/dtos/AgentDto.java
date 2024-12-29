@@ -1,63 +1,73 @@
 package com.alexaytov.ai_hub.model.dtos;
 
-import org.hibernate.validator.constraints.Length;
-
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
+import org.hibernate.validator.constraints.Length;
 
 public class AgentDto {
 
-    private Long id;
+  private Long id;
 
-    @NotNull
-    @Length(max = 50)
-    private String name;
+  @NotNull
+  @Length(max = 50)
+  private String name;
 
-    @NotNull
-    @Length(max = 255)
-    private String description;
+  @NotNull
+  @Length(max = 255)
+  private String description;
 
-    @NotNull
-    private Long modelId;
-    @NotNull
-    private Long systemMessageId;
+  @NotNull
+  private Long modelId;
+  @NotNull
+  private Long systemMessageId;
 
-    public @NotNull @Length(max = 50) String getName() {
-        return name;
-    }
+  private List<Long> dataSources;
 
-    public void setName(@NotNull @Length(max = 50) String name) {
-        this.name = name;
-    }
+  public List<Long> getDataSources() {
+    return dataSources;
+  }
 
-    public @NotNull @Length(max = 255) String getDescription() {
-        return description;
-    }
+  public void setDataSources(List<Long> dataSources) {
+    this.dataSources = dataSources;
+  }
 
-    public void setDescription(@NotNull @Length(max = 255) String description) {
-        this.description = description;
-    }
+  public @NotNull @Length(max = 50) String getName() {
+    return name;
+  }
 
-    public Long getId() {
-        return id;
-    }
+  public void setName(@NotNull @Length(max = 50) String name) {
+    this.name = name;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public @NotNull @Length(max = 255) String getDescription() {
+    return description;
+  }
 
-    public Long getModelId() {
-        return modelId;
-    }
+  public void setDescription(@NotNull @Length(max = 255) String description) {
+    this.description = description;
+  }
 
-    public void setModelId(Long modelId) {
-        this.modelId = modelId;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public Long getSystemMessageId() {
-        return systemMessageId;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public void setSystemMessageId(Long systemMessageId) {
-        this.systemMessageId = systemMessageId;
-    }
+  public Long getModelId() {
+    return modelId;
+  }
+
+  public void setModelId(Long modelId) {
+    this.modelId = modelId;
+  }
+
+  public Long getSystemMessageId() {
+    return systemMessageId;
+  }
+
+  public void setSystemMessageId(Long systemMessageId) {
+    this.systemMessageId = systemMessageId;
+  }
 }

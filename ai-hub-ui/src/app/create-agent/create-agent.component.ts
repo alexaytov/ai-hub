@@ -1,7 +1,9 @@
 import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
+  ElementRef,
   OnInit,
+  Query,
   ViewChild,
 } from '@angular/core';
 
@@ -34,6 +36,9 @@ import { AxiosError } from 'axios';
 import { Error } from '../models/error.model';
 import { ChatMessage } from '../models/chat-message.model';
 import { QueryRequest } from '../models/query-request.model';
+import { ListDataSource } from '../models/ListDataSource.model';
+import { SystemMessagesComponent } from '../system-messages/system-messages.component';
+import { Agent } from '../models/agent.model';
 
 @Component({
   selector: 'app-create-agent',
@@ -74,6 +79,11 @@ export class CreateAgentComponent implements OnInit {
   waitingResponse: any;
   currentMessage: string | undefined;
 
+  dataSourceIds: number[] | undefined;
+  dataSources: ListDataSource[] | undefined;
+
+  @ViewChild('dataSourcesSelectors', {static: true}) dataSourcesRefs: ElementRef | undefined;
+
   constructor(
     private router: Router,
     private axios: AxiosService,
@@ -101,6 +111,7 @@ export class CreateAgentComponent implements OnInit {
       .catch((error) => {
         this.error = error.message;
       });
+
     this.axios
       .request('GET', '/chat-models')
       .then((response) => {
@@ -110,34 +121,75 @@ export class CreateAgentComponent implements OnInit {
       .catch((error) => {
         this.error = error.message;
       });
+
+      this.axios
+      .request('GET', '/data-sources')
+      .then((response) => {
+        this.dataSources = response.data;
+      })
+      .catch((error) => {
+        this.error = error.message;
+      });
+  }
+
+  onAddDataSource() {
+    if (this.dataSourceIds == undefined) {
+      this.dataSourceIds = [];
+    }
+
+    this.dataSourceIds.push(1);
+  }
+
+  buildDataSourceIds(): number[] {
+    const selectors = this.dataSourcesRefs?.nativeElement.querySelectorAll('.data-source-selector');
+    if (!selectors) {
+      return [];
+    } 
+
+    const ids = [];
+    for (let selector of selectors) {
+      ids.push(selector.value);
+    }
+    return ids;
   }
 
   onUpdateParameters() {
     let parameters: { [key: string]: string } | undefined;
     if (this.model.nativeElement.value) {
-      parameters = this.models.find(m => m.id === this.model.nativeElement.value)?.parameters;
+      parameters = this.models.find(m => m.id == this.model.nativeElement.value)?.parameters;
     } else {
       parameters = this.models[0].parameters;
     }
 
     if (!parameters) {
+      this.presencePenalty = undefined;
+      this.frequencyPenalty = undefined;
+      this.maxTokens = undefined;
       return;
     }
 
-    if (parameters['presencePenalty']) {
+    if (parameters['presencePenalty'] != null) {
       this.presencePenalty = parseFloat(parameters['presencePenalty']);
+    } else {
+      this.presencePenalty = undefined;
     }
 
-    if (parameters['frequencyPenalty']) {
+    if (parameters['frequencyPenalty'] != null) {
       this.frequencyPenalty = parseFloat(parameters['frequencyPenalty']);
+    } else {
+      this.frequencyPenalty = undefined
     }
 
-    if (parameters['temperature']) {
-      this.frequencyPenalty = parseFloat(parameters['temperature']);
+    if (parameters['temperature'] != null) {
+      this.temperature = parseFloat(parameters['temperature']);
+    } else {
+      this.temperature = undefined;
     }
 
-    if (parameters['maxTokens']) {
-      this.frequencyPenalty = parseFloat(parameters['maxTokens']);
+    if (parameters['maxTokens'] != null) {
+      this.maxTokens = parseFloat(parameters['maxTokens']);
+    } else {
+      this.maxTokens = undefined;
     }
   }
 
@@ -151,7 +203,7 @@ export class CreateAgentComponent implements OnInit {
     this.usingCustomMessage = true;
   }
 
-  onSubmit() {
+  async onSubmit() {
     this.error = undefined;
     this.hideError = false;
 
@@ -159,12 +211,23 @@ export class CreateAgentComponent implements OnInit {
       return;
     }
 
+    let systemMessageId = this.message.nativeElement.value;
+    if (systemMessageId == -1 && this.customInstructionalMessage.nativeElement.value) {
+      const response = await this.axios.request('POST', '/system-messages', {message: this.customInstructionalMessage.nativeElement.value});
+      systemMessageId = response.data.id;
+    }
+
     const agent = {
       name: this.form.value.name,
       description: this.form.value.description,
-      systemMessageId: this.message.nativeElement.value,
       modelId: this.model.nativeElement.value,
+      systemMessageId: systemMessageId,
+      dataSources: this.buildDataSourceIds()
     };
+
+    if (systemMessageId == -1) {
+      delete agent.systemMessageId;
+    }
 
     this.axios
       .request('POST', '/agents', agent)
@@ -188,7 +251,8 @@ export class CreateAgentComponent implements OnInit {
   }
 
   onKeydown(event: KeyboardEvent) {
-    if (event.key === 'Enter' && event.metaKey && !this.waitingResponse) {
+    if (event.key === 'Enter' && !event.shiftKey && !this.waitingResponse) {
+      event.preventDefault();
       const message = this.input.nativeElement.value;
       this.input.nativeElement.value = '';
       this.sendMessage(message);
@@ -237,11 +301,14 @@ export class CreateAgentComponent implements OnInit {
       parameters['maxTokens'] = this.maxTokens.toString();
     }
 
+    const dataSourceIds = this.buildDataSourceIds();
+
     const queryRequest: QueryRequest = {
       modelId: this.model.nativeElement.value,
       systemMessage: this.getSystemMessage(),
       messages: lastMessages || [],
       customParameters: parameters,
+      dataSources: dataSourceIds
     }
 
     this.axios

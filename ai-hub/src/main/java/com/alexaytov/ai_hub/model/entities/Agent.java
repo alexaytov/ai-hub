@@ -1,85 +1,91 @@
 package com.alexaytov.ai_hub.model.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "agents")
 public class Agent {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(nullable = false, length = 50)
-    private String name;
+  @Column(nullable = false, length = 50)
+  private String name;
 
-    @Column(nullable = false, length = 255)
-    private String description;
+  @Column(nullable = false, length = 255)
+  private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "model_id", nullable = false)
-    private AIModel model;
+  @ManyToOne
+  @JoinColumn(name = "model_id", nullable = false)
+  private AIModel model;
 
-    @ManyToOne
-    @JoinColumn(name = "message_id", nullable = false)
-    private SystemMessage systemMessage;
+  @ManyToOne
+  @JoinColumn(name = "message_id", nullable = false)
+  private SystemMessage systemMessage;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+  @ManyToOne
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
-    public Long getId() {
-        return id;
-    }
+  @OneToMany
+  private List<DataSource> dataSources;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public List<DataSource> getDataSources() {
+    return dataSources;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public void setDataSources(List<DataSource> dataSources) {
+    this.dataSources = dataSources;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public AIModel getModel() {
-        return model;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setModel(AIModel model) {
-        this.model = model;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public SystemMessage getSystemMessage() {
-        return systemMessage;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public void setSystemMessage(SystemMessage systemMessage) {
-        this.systemMessage = systemMessage;
-    }
+  public AIModel getModel() {
+    return model;
+  }
 
-    public User getUser() {
-        return user;
-    }
+  public void setModel(AIModel model) {
+    this.model = model;
+  }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+  public SystemMessage getSystemMessage() {
+    return systemMessage;
+  }
+
+  public void setSystemMessage(SystemMessage systemMessage) {
+    this.systemMessage = systemMessage;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
 }

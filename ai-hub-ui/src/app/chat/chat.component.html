@@ -24,13 +24,8 @@
   </section>
 
   <div class="input-container">
-    <ui5-input
-      #input
-      id="chatInput"
-      i18n-placeholder
-      placeholder="Type your message..."
-      (keydown)="onKeydown($event)"
-    ></ui5-input>
+    <ui5-textarea #input id="chatInput" i18n-placeholder placeholder="Type your message..."
+        (keydown)="onKeydown($event)"></ui5-textarea>
     <ui5-button
       [disabled]="waitingResponse"
       i18n

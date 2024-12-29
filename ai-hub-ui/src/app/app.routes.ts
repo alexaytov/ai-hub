@@ -12,6 +12,8 @@ import { CreateMessageComponent } from './create-message/create-message.componen
 import { ChatsComponent } from './chats/chats.component';
 import { ChatComponent } from './chat/chat.component';
 import { AuditLogsComponent } from './audit-logs/audit-logs.component';
+import { DataSourcesComponent } from './data-sources/data-sources.component';
+import { CreateDataSourceComponent } from './create-data-source/create-data-source.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -27,5 +29,7 @@ export const routes: Routes = [
   { path: 'agents', component: AgentsComponent },
   { path: 'create-agent', component: CreateAgentComponent },
   { path: 'audit-logs', component: AuditLogsComponent },
+  { path: 'data-sources', component: DataSourcesComponent },
+  { path: 'create-data-source', component: CreateDataSourceComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];

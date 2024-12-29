@@ -152,7 +152,8 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   }
 
   onKeydown(event: KeyboardEvent) {
-    if (event.key === 'Enter' && !this.waitingResponse) {
+    if (event.key === 'Enter' && !event.shiftKey && !this.waitingResponse) {
+      event.preventDefault();
       this.sendMessage();
     }
   }

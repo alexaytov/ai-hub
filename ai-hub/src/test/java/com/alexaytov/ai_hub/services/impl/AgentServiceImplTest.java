@@ -1,10 +1,11 @@
 package com.alexaytov.ai_hub.services.impl;
 
-import java.util.List;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.alexaytov.ai_hub.model.dtos.AgentDto;
 import com.alexaytov.ai_hub.model.entities.AIModel;
@@ -12,16 +13,14 @@ import com.alexaytov.ai_hub.model.entities.Agent;
 import com.alexaytov.ai_hub.model.entities.SystemMessage;
 import com.alexaytov.ai_hub.model.entities.User;
 import com.alexaytov.ai_hub.repositories.AgentRepository;
+import com.alexaytov.ai_hub.repositories.DataSourceRepository;
 import com.alexaytov.ai_hub.repositories.ModelRepository;
 import com.alexaytov.ai_hub.repositories.SystemMessageRepository;
 import com.alexaytov.ai_hub.services.UserService;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 
 class AgentServiceImplTest {
 
@@ -40,8 +39,9 @@ class AgentServiceImplTest {
         modelMapper = mock(ModelMapper.class);
         systemMessageRepository = mock(SystemMessageRepository.class);
         modelRepository = mock(ModelRepository.class);
+        DataSourceRepository dataSourceRepo = mock(DataSourceRepository.class);
 
-        classUnderTest = new AgentServiceImpl(userService, agentRepository, modelMapper, systemMessageRepository, modelRepository);
+        classUnderTest = new AgentServiceImpl(userService, agentRepository, modelMapper, systemMessageRepository, modelRepository, dataSourceRepo);
     }
 
     @Test
