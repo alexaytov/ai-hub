@@ -35,3 +35,6 @@ api-key.secret: ${API_KEY_SECRET:XiVTCEWnPSD3/7B2juL4xwecc7vwsVd6CqpHGNwKvZU=}
 audit-log:
   service:
     url: ${AUDIT_LOG_SERVICE_URL:http://localhost:9091}
+
+chromadb:
+  host: http://localhost:8000

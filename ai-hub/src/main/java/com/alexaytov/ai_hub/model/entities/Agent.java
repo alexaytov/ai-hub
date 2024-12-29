@@ -1,13 +1,8 @@
 package com.alexaytov.ai_hub.model.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "agents")
@@ -34,6 +29,17 @@ public class Agent {
   @ManyToOne
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
+
+  @OneToMany
+  private List<DataSource> dataSources;
+
+  public List<DataSource> getDataSources() {
+    return dataSources;
+  }
+
+  public void setDataSources(List<DataSource> dataSources) {
+    this.dataSources = dataSources;
+  }
 
   public Long getId() {
     return id;

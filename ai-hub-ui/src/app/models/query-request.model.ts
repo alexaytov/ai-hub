@@ -5,4 +5,5 @@ export interface QueryRequest {
     systemMessage: string;
     messages: ChatMessage[];
     customParameters: { [key: string]: string };
+    dataSources: number[];
 }

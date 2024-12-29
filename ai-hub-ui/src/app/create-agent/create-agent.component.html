@@ -50,6 +50,14 @@
             model.name
             }}</ui5-option>
         </ui5-select>
+        <br>
+        <ui5-label>Data Sources:</ui5-label>
+        <ui5-button (click)="onAddDataSource()">Add Data Source</ui5-button>
+        <div #dataSourcesSelectors>
+          <ui5-select class="data-source-selector" *ngFor="let dataSourceId of dataSourceIds">
+            <ui5-option *ngFor="let source of dataSources" [value]="source.id">{{source.fileName}}</ui5-option>
+          </ui5-select>
+        </div>
       </div>
       <div *ngIf="presencePenalty || frequencyPenalty || temperature || maxTokens" style="width: 50%;">
         <ui5-label>Parameters:</ui5-label>
@@ -107,7 +115,7 @@
     </section>
 
     <div class="input-container">
-      <ui5-textarea #input id="chatInput" i18n-placeholder placeholder="Type your message..."
+      <ui5-textarea style="width: 89%" #input id="chatInput" i18n-placeholder placeholder="Type your message..."
         (keydown)="onKeydown($event)"></ui5-textarea>
       <ui5-button [disabled]="waitingResponse" i18n design="Emphasized" (click)="onSendMessageClick()">Send</ui5-button>
     </div>

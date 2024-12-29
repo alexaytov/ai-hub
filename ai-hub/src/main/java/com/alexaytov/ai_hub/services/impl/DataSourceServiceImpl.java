@@ -2,6 +2,7 @@ package com.alexaytov.ai_hub.services.impl;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
+import com.alexaytov.ai_hub.config.ChromaDB;
 import com.alexaytov.ai_hub.model.DataSourceProjection;
 import com.alexaytov.ai_hub.model.dtos.DataDto;
 import com.alexaytov.ai_hub.model.entities.DataSource;
@@ -12,8 +13,6 @@ import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.Metadata;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
-import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
-import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever.EmbeddingStoreContentRetrieverBuilder;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import dev.langchain4j.store.embedding.chroma.ChromaEmbeddingStore;
 import jakarta.transaction.Transactional;
@@ -26,14 +25,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 @Service
-public class DataSourceImpl implements DataSourceService {
+public class DataSourceServiceImpl implements DataSourceService {
 
   private final DataSourceRepository dataSourceRepository;
   private final UserService userService;
+  private final ChromaDB chromaDB;
 
-  public DataSourceImpl(DataSourceRepository dataSourceRepository, UserService userService) {
+  public DataSourceServiceImpl(
+      DataSourceRepository dataSourceRepository, UserService userService, ChromaDB chromaDB) {
     this.dataSourceRepository = dataSourceRepository;
     this.userService = userService;
+    this.chromaDB = chromaDB;
   }
 
   @Override
@@ -44,17 +46,24 @@ public class DataSourceImpl implements DataSourceService {
     source.setData(dataSource.getData());
     source.setUser(userService.getUser());
 
-    ChromaEmbeddingStore store = ChromaEmbeddingStore.builder()
-        .collectionName("user_" + userService.getUser().getId())
-        .baseUrl("http://localhost:8080")
-        .build();
+    // Make sure file name is unique
+    if (dataSourceRepository
+        .findByUserIdAndFileName(userService.getUser().getId(), dataSource.getFileName())
+        .isPresent()) {
+      throw new HttpClientErrorException(BAD_REQUEST, "File name already exists");
+    }
+
+    ChromaEmbeddingStore store =
+        ChromaEmbeddingStore.builder()
+            .collectionName("user_" + userService.getUser().getId())
+            .baseUrl(chromaDB.getHost())
+            .build();
 
     EmbeddingModel model = new AllMiniLmL6V2EmbeddingModel();
 
-    EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
-        .embeddingModel(model)
-        .embeddingStore(store)
-        .build();
+    EmbeddingStoreIngestor ingestor =
+        EmbeddingStoreIngestor.builder()
+                .embeddingModel(model).embeddingStore(store).build();
 
     String text;
 
@@ -74,7 +83,7 @@ public class DataSourceImpl implements DataSourceService {
         throw new HttpClientErrorException(BAD_REQUEST, "Unsupported file type");
     }
 
-    ingestor.ingest(Document.document(text));
+    ingestor.ingest(Document.document(text, Metadata.metadata("name", dataSource.getFileName())));
 
     return dataSourceRepository.save(source);
   }
@@ -89,5 +98,4 @@ public class DataSourceImpl implements DataSourceService {
   public void deleteDataSource(Long id) {
     dataSourceRepository.deleteByIdAndUserId(id, userService.getUser().getId());
   }
-
 }
