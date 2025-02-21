@@ -30,7 +30,12 @@ public class Agent {
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
-  @OneToMany
+  @ManyToMany
+  @JoinTable(
+      name = "agent_data_sources",
+      joinColumns = @JoinColumn(name = "agent_id"),
+      inverseJoinColumns = @JoinColumn(name = "data_source_id")
+  )
   private List<DataSource> dataSources;
 
   public List<DataSource> getDataSources() {

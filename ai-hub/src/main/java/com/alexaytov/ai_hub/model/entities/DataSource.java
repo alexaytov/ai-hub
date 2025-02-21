@@ -1,5 +1,6 @@
 package com.alexaytov.ai_hub.model.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,8 +8,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.util.List;
 
 @Entity
 @Table(name = "data_sources")
@@ -26,8 +29,19 @@ public class DataSource {
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
+  @ManyToMany(mappedBy = "dataSources", cascade = CascadeType.ALL)
+  private List<Agent> agents;
+
+  public List<Agent> getAgents() {
+    return agents;
+  }
+
+  public void setAgents(List<Agent> agents) {
+    this.agents = agents;
+  }
+
   @Lob
-  @Column(nullable = false, columnDefinition = "LONGBLOB", length = 1000000)
+  @Column(nullable = false, length = 1000000)
   private byte[] data;
 
   public Long getId() {

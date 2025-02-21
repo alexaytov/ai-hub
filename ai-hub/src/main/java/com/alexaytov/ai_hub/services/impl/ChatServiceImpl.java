@@ -164,24 +164,32 @@ public class ChatServiceImpl implements ChatService {
     private String generateResponse(ChatLanguageModel model, List<ChatMessage> messages, List<DataSource> dataSources) {
         try {
             ChromaEmbeddingStore store =
-                    ChromaEmbeddingStore.builder()
-                            .collectionName("user_" + userService.getUser().getId())
-                            .baseUrl(chromaDB.getHost())
-                            .build();
-            EmbeddingStoreContentRetriever retriever =
-                    EmbeddingStoreContentRetriever.builder()
-                            .embeddingModel(new AllMiniLmL6V2EmbeddingModel())
-                            .embeddingStore(store)
-                            .maxResults(3)
-                            .minScore(0.75)
-                            .filter(
-                                    metadataKey("name")
-                                            .isIn(dataSources.stream().map(DataSource::getFileName).toList()))
-                            .build();
+                ChromaEmbeddingStore.builder()
+                    .collectionName("user_" + userService.getUser().getId())
+                    .baseUrl(chromaDB.getHost())
+                    .build();
+
+            EmbeddingStoreContentRetriever retrier = dataSources.isEmpty() ?
+                EmbeddingStoreContentRetriever.builder()
+                    .embeddingModel(new AllMiniLmL6V2EmbeddingModel())
+                    .embeddingStore(store)
+                    .maxResults(1)
+                    .minScore(0.5)
+                    .build() :
+                EmbeddingStoreContentRetriever.builder()
+                    .embeddingModel(new AllMiniLmL6V2EmbeddingModel())
+                    .embeddingStore(store)
+                    .maxResults(1)
+                    .minScore(0.5)
+                    .filter(
+                        metadataKey("name")
+                            .isIn(dataSources.stream().map(DataSource::getFileName).toList()))
+                    .build();
+
 
             Assistant assistant = AiServices.builder(Assistant.class)
                     .chatLanguageModel(model )
-                    .contentRetriever(retriever)
+                    .contentRetriever(retrier)
                     .build();
 
             Result<String> chat = assistant.chat(messages.get(messages.size() - 1).text());

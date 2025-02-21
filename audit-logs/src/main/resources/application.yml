@@ -29,4 +29,4 @@ logging:
       nodeValue: WARN
     blog: WARN
 server:
-  port: 9091
+  port: 1001

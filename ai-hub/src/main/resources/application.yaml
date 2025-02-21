@@ -1,6 +1,9 @@
+
+
+
 spring:
   jpa:
-    database-platform: org.hibernate.dialect.MySQLDialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     defer-datasource-initialization: true
     properties:
       hibernate:
@@ -15,10 +18,12 @@ spring:
       filter:
         enabled: 'true'
   datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
-    password: ${DB_PASSWORD}
-    username: ${DB_USERNAME}
-    url: jdbc:mysql://localhost:3306/ai-hub?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
+    hikari:
+      auto-commit: false
+    driverClassName: org.postgresql.Driver
+    password:
+    username:
+    url: jdbc:postgresql://localhost:5432/ai-hub
 logging:
   level:
     org:
@@ -29,12 +34,12 @@ logging:
       nodeValue: WARN
     blog: WARN
 server:
-  port: 9090
+  port: 1002
 security.jwt.token.secret-key: my-secret-key
 api-key.secret: ${API_KEY_SECRET:XiVTCEWnPSD3/7B2juL4xwecc7vwsVd6CqpHGNwKvZU=}
 audit-log:
   service:
-    url: ${AUDIT_LOG_SERVICE_URL:http://localhost:9091}
+    url: ${AUDIT_LOG_SERVICE_URL:http://localhost:1001}
 
 chromadb:
   host: http://localhost:8000

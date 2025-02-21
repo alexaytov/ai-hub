@@ -6,7 +6,7 @@ import axios from 'axios';
 })
 export class AxiosService {
   constructor() {
-    axios.defaults.baseURL = 'http://localhost:9090';
+    axios.defaults.baseURL = 'http://localhost:1002';
     axios.defaults.headers.post['Content-Type'] = 'application/json';
   }
 

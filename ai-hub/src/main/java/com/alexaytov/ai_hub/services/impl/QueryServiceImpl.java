@@ -19,6 +19,7 @@ import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
@@ -28,7 +29,6 @@ import dev.langchain4j.store.embedding.chroma.ChromaEmbeddingStore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -43,17 +43,17 @@ public class QueryServiceImpl implements QueryService {
   private final ChromaDB chromaDB;
 
   public QueryServiceImpl(
-          UserService userService,
-          Encryption encryption,
-          ModelRepository modelRepository,
-          AIService aiService,
-          DataSourceRepository dataSourceRepository, ChromaDB chromaDB) {
+      UserService userService,
+      Encryption encryption,
+      ModelRepository modelRepository,
+      AIService aiService,
+      DataSourceRepository dataSourceRepository, ChromaDB chromaDB) {
     this.userService = userService;
     this.encryption = encryption;
     this.modelRepository = modelRepository;
     this.aiService = aiService;
     this.dataSourceRepository = dataSourceRepository;
-      this.chromaDB = chromaDB;
+    this.chromaDB = chromaDB;
   }
 
   @Override
@@ -99,21 +99,34 @@ public class QueryServiceImpl implements QueryService {
             .collectionName("user_" + userService.getUser().getId())
             .baseUrl(chromaDB.getHost())
             .build();
-    EmbeddingStoreContentRetriever retriever =
+
+    EmbeddingStoreContentRetriever retrier = dataSources.isEmpty() ?
         EmbeddingStoreContentRetriever.builder()
             .embeddingModel(new AllMiniLmL6V2EmbeddingModel())
             .embeddingStore(store)
-            .maxResults(3)
-            .minScore(0.75)
+            .maxResults(1)
+            .minScore(0.5)
+            .build() :
+        EmbeddingStoreContentRetriever.builder()
+            .embeddingModel(new AllMiniLmL6V2EmbeddingModel())
+            .embeddingStore(store)
+            .maxResults(1)
+            .minScore(0.5)
             .filter(
                 metadataKey("name")
                     .isIn(dataSources.stream().map(DataSource::getFileName).toList()))
             .build();
 
+    MessageWindowChatMemory memory = new MessageWindowChatMemory.Builder()
+        .maxMessages(5)
+        .build();
+    messages.subList(0, messages.size() - 1).forEach(memory::add);
+
     Assistant assistant = AiServices.builder(Assistant.class)
-            .chatLanguageModel(languageModel)
-            .contentRetriever(retriever)
-            .build();
+        .chatLanguageModel(languageModel)
+        .contentRetriever(retrier)
+        .chatMemory(memory)
+        .build();
 
     Result<String> chat = assistant.chat(messages.get(messages.size() - 1).text());
 

@@ -15,10 +15,12 @@ import com.alexaytov.ai_hub.repositories.SystemMessageRepository;
 import com.alexaytov.ai_hub.services.AgentService;
 import com.alexaytov.ai_hub.services.UserService;
 import jakarta.transaction.Transactional;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.modelmapper.ModelMapper;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -80,7 +82,7 @@ public class AgentServiceImpl implements AgentService {
       return;
     }
 
-    repository.delete(agent.get());
+    repository.deleteById(agent.get().getId());
   }
 
   @Override
@@ -94,6 +96,11 @@ public class AgentServiceImpl implements AgentService {
     AIModel model = modelRepository.findById(dto.getModelId())
         .orElseThrow(() -> new HttpClientErrorException(BAD_REQUEST, "Invalid model id"));
 
+    Agent agent = mapper.map(dto, Agent.class);
+    agent.setUser(user);
+    agent.setModel(model);
+    agent.setSystemMessage(message);
+
     List<DataSource> sources = new ArrayList<>();
     if (dto.getDataSources() != null) {
       for (Long sourceId : dto.getDataSources()) {
@@ -103,11 +110,6 @@ public class AgentServiceImpl implements AgentService {
         sources.add(source);
       }
     }
-
-    Agent agent = mapper.map(dto, Agent.class);
-    agent.setUser(user);
-    agent.setModel(model);
-    agent.setSystemMessage(message);
     agent.setDataSources(sources);
 
     agent = repository.save(agent);
